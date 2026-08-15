@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kairos — AI/CS Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --bg-alt: #F2F7FA;
+    --ink: #0B2A42;
+    --ink-soft: #3E5A6C;
+    --line: #C9D8DE;
+    --accent: #1E7FA6;
+    --accent-deep: #0B2A42;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #071018;
+    --bg-alt: #0C1A24;
+    --ink: #DCEBF2;
+    --ink-soft: #86A0AD;
+    --line: #1E3644;
+    --accent: #4FB8E0;
+    --accent-deep: #DCEBF2;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    transition: background 0.35s ease, color 0.35s ease;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+  a { color: inherit; }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* pixel heading style, shared */
+  .pixel {
+    font-family: 'Press Start 2P', monospace;
+    line-height: 1.6;
+  }
+
+  /* ---------- NAV ---------- */
+  header {
+    border-bottom: 2px solid var(--ink);
+    background: var(--bg);
+    transition: background-color 0.35s ease, border-color 0.35s ease;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+  }
+  .navbrand { display: flex; align-items: center; gap: 10px; }
+  .navbrand span { font-family: 'Press Start 2P', monospace; font-size: 12px; }
+
+  .nav-links { display: flex; list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .nav-links li + li { margin-left: 22px; }
+  .nav-links a { text-decoration: none; transition: color 0.2s ease; }
+  .nav-links a:hover { color: var(--accent); text-decoration: underline; }
+
+  .theme-toggle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: var(--bg);
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .theme-toggle:hover { background: var(--ink); color: var(--bg); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- HERO ---------- */
+  .hero { padding: 56px 0 48px; border-bottom: 2px dashed var(--line); transition: border-color 0.35s ease; }
+  .hero-inner { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+  .hero-text { flex: 1; min-width: 260px; max-width: 620px; }
+
+  .tag-line {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .tag-line::before { content: "> "; }
+
+  h1.pixel {
+    font-size: 22px;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+
+  .hero p {
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 52ch;
+    margin: 0 0 20px;
+  }
+
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 16px;
+    text-decoration: none;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    background: var(--bg);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  }
+  .btn:hover { background: var(--ink); color: var(--bg); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn.solid { background: var(--ink); color: var(--bg); }
+  .btn.solid:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+  /* ---------- SECTIONS ---------- */
+  section { padding: 48px 0; border-bottom: 2px dashed var(--line); transition: border-color 0.35s ease; }
+  section:last-of-type { border-bottom: none; }
+
+  .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+  .section-label span { color: var(--accent); }
+
+  .prose { color: var(--ink-soft); line-height: 1.75; max-width: 62ch; }
+  .prose + .prose { margin-top: 14px; }
+
+  /* list-style items, terminal style */
+  .term-list { margin-top: 22px; }
+  .term-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 10px;
+    margin: 0 -10px;
+    border-top: 1px solid var(--line);
+    transition: background-color 0.25s ease, border-color 0.3s ease;
+  }
+  .term-item:hover { background: var(--bg-alt); }
+  .term-item:last-child { border-bottom: 1px solid var(--line); }
+  .term-item .idx {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: var(--accent);
+    width: 36px;
+    flex-shrink: 0;
+  }
+  .term-item h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14.5px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .term-item p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.6; }
+
+  /* join */
+  .join-box {
+    border: 2px solid var(--ink);
+    padding: 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--bg-alt);
+    transition: background-color 0.35s ease, border-color 0.35s ease;
+  }
+  .join-box p { margin: 6px 0 0; color: var(--ink-soft); font-size: 13.5px; }
+  .join-intro { max-width: 60ch; }
+
+  .join-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .join-form .field:nth-child(3),
+  .join-form .field:nth-child(4),
+  .join-form .field:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+  .join-form button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    cursor: pointer;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .field .optional { color: var(--ink-soft); opacity: 0.7; }
+
+  .field input,
+  .field textarea {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    background: var(--bg);
+    color: var(--ink);
+    border: 2px solid var(--line);
+    padding: 9px 10px;
+    resize: vertical;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .join-status {
+    grid-column: 1 / -1;
+    font-size: 13px;
+    min-height: 1.4em;
+    transition: color 0.2s ease;
+  }
+  .join-status.ok { color: var(--accent); }
+  .join-status.err { color: #B4432C; }
+
+  @media (max-width: 640px) {
+    .join-form { grid-template-columns: 1fr; }
+    .join-form .field:nth-child(3),
+    .join-form .field:nth-child(4),
+    .join-form .field:nth-child(5) { grid-column: 1; }
+  }
+
+  footer { padding: 24px 0 40px; }
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 640px) {
+    .hero-inner { flex-direction: column; align-items: flex-start; }
+    .nav-links { display: none; }
+  }
+
+  /* scroll reveal: text eases upward into place */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s cubic-bezier(.2,.65,.3,1), transform 0.7s cubic-bezier(.2,.65,.3,1);
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="navbrand">
+        <span>KAIROS SYNDICATE</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#about">about</a></li>
+        <li><a href="#do">what we do</a></li>
+        <li><a href="#join">join</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle">dark mode</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-text">
+        <div class="tag-line">ai_cs_club</div>
+        <h1 class="pixel">Kairos</h1>
+        <p>Kairos is an AI/CS club. We meet regularly, work on small projects together, and help each other learn things — algorithms, systems, whatever people are into that term. Nothing more dramatic than that.</p>
+        <div class="btn-row">
+          <a href="#join" class="btn solid">Join</a>
+          <a href="#about" class="btn">Read more</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-label reveal"><span>#</span> about</div>
+      <div class="prose reveal">
+        <p>The name comes from a Greek word, kairos — it roughly means "the right moment to do something," as opposed to time just passing by. It felt like a fitting name for a club built around actually sitting down and building things, rather than just talking about them.</p>
+        <p>We're not a huge organisation and we don't run a big calendar of events. It's mostly regular sessions, some pair-programming, occasional talks from people in the club, and a shared Discord/group where questions get asked and answered.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="do">
+    <div class="wrap">
+      <div class="section-label reveal"><span>#</span> what we do</div>
+      <div class="term-list">
+        <div class="term-item reveal">
+          <div class="idx">01</div>
+          <div>
+            <h3>Build sessions</h3>
+            <p>Small, informal sessions where a few people sit down and work on a project together — nothing polished, just working code by the end.</p>
+          </div>
+        </div>
+        <div class="term-item reveal reveal-delay-1">
+          <div class="idx">02</div>
+          <div>
+            <h3>Problem solving practice</h3>
+            <p>Some members practice competitive programming together and occasionally take part in contests as a group.</p>
+          </div>
+        </div>
+        <div class="term-item reveal reveal-delay-2">
+          <div class="idx">03</div>
+          <div>
+            <h3>Systems &amp; low-level stuff</h3>
+            <p>For people who want to go a level under the usual coursework — how things actually run under the hood.</p>
+          </div>
+        </div>
+        <div class="term-item reveal reveal-delay-3">
+          <div class="idx">04</div>
+          <div>
+            <h3>Open source</h3>
+            <p>Looking into contributing to existing projects, and maybe maintaining a couple of our own down the line.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="join">
+    <div class="wrap">
+      <div class="section-label reveal"><span>#</span> join</div>
+      <div class="join-box reveal">
+        <div class="join-intro">
+          <div class="pixel" style="font-size: 13px;">no application needed</div>
+          <p>Leave your details and we'll reach out — or just come to a session directly.</p>
+        </div>
+
+        <form id="joinForm" class="join-form" novalidate>
+          <div class="field">
+            <label for="joinName">name</label>
+            <input type="text" id="joinName" name="name" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="joinEmail">email</label>
+            <input type="email" id="joinEmail" name="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="joinYear">class / college year</label>
+            <input type="text" id="joinYear" name="year" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="joinDeliver">what can you bring to the org?</label>
+            <textarea id="joinDeliver" name="deliver" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label for="joinNote">what draws you to this club?</label>
+            <textarea id="joinNote" name="note" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn solid">Submit</button>
+          <div id="joinStatus" class="join-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <div>Kairos Syndicate — AI/CS Club</div>
+  </div>
+</footer>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    toggle.textContent = next === 'dark' ? 'light mode' : 'dark mode';
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach((el) => observer.observe(el));
+
+  // Join form -> Google Sheet via a Google Apps Script Web App.
+  // Follow the setup steps provided alongside this file, then paste
+  // your deployed Web App URL below, replacing the placeholder.
+  const SHEET_ENDPOINT = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+  const joinForm = document.getElementById('joinForm');
+  const joinStatus = document.getElementById('joinStatus');
+  const submitBtn = joinForm.querySelector('button[type="submit"]');
+
+  joinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('joinName').value.trim();
+    const email = document.getElementById('joinEmail').value.trim();
+    const year = document.getElementById('joinYear').value.trim();
+    const deliver = document.getElementById('joinDeliver').value.trim();
+    const note = document.getElementById('joinNote').value.trim();
+
+    if (!name || !email || !year) {
+      joinStatus.textContent = 'name, email, and class/college year are required.';
+      joinStatus.className = 'join-status err';
+      return;
+    }
+
+    const submission = { name, email, year, deliver, note };
+
+    if (!SHEET_ENDPOINT || SHEET_ENDPOINT.includes('PASTE_YOUR')) {
+      console.log('Join request (backend not connected yet):', submission);
+      joinStatus.textContent = 'backend not connected yet — logged to console for now.';
+      joinStatus.className = 'join-status err';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    joinStatus.textContent = 'sending…';
+    joinStatus.className = 'join-status';
+
+    try {
+      // Apps Script Web Apps don't return readable CORS responses from
+      // a plain static page, so this fires in "no-cors" mode: the
+      // request still reaches the sheet, we just can't read the
+      // response back — hence the optimistic success message below.
+      await fetch(SHEET_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(submission).toString(),
+      });
+
+      joinStatus.textContent = 'got it — we\'ll be in touch.';
+      joinStatus.className = 'join-status ok';
+      joinForm.reset();
+    } catch (err) {
+      joinStatus.textContent = 'something went wrong — try again in a bit.';
+      joinStatus.className = 'join-status err';
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
