@@ -19,13 +19,13 @@
   }
 
   :root[data-theme="dark"] {
-    --bg: #071018;
-    --bg-alt: #0C1A24;
-    --ink: #DCEBF2;
-    --ink-soft: #86A0AD;
-    --line: #1E3644;
+    --bg: #0A0A0A;
+    --bg-alt: #151515;
+    --ink: #EDEDED;
+    --ink-soft: #9B9B9B;
+    --line: #2B2B2B;
     --accent: #4FB8E0;
-    --accent-deep: #DCEBF2;
+    --accent-deep: #EDEDED;
   }
 
   * { box-sizing: border-box; }
@@ -130,7 +130,6 @@
   .btn.solid { background: var(--ink); color: var(--bg); }
   .btn.solid:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
-  /* ---------- SECTIONS ---------- */
   section { padding: 48px 0; border-bottom: 2px dashed var(--line); transition: border-color 0.35s ease; }
   section:last-of-type { border-bottom: none; }
 
@@ -173,7 +172,6 @@
   }
   .term-item p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.6; }
 
-  /* join */
   .join-box {
     border: 2px solid var(--ink);
     padding: 26px 24px;
@@ -259,7 +257,6 @@
     .nav-links { display: none; }
   }
 
-  /* scroll reveal: text eases upward into place */
   .reveal {
     opacity: 0;
     transform: translateY(22px);
@@ -290,10 +287,11 @@
   <div class="wrap">
     <nav>
       <div class="navbrand">
-        <span>KAIROS SYNDICATE</span>
+        <a href="index.html" style="text-decoration:none; color:inherit;"><span>KAIROS SYNDICATE</span></a>
       </div>
       <ul class="nav-links">
         <li><a href="#about">about</a></li>
+        <li><a href="team.html">team</a></li>
         <li><a href="#do">what we do</a></li>
         <li><a href="#join">join</a></li>
       </ul>
