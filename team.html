@@ -41,7 +41,6 @@
     transition: background 0.35s ease, color 0.35s ease;
   }
 
-  /* simple drifting dot-grid background */
   #bgCanvas {
     position: fixed;
     inset: 0;
@@ -156,7 +155,6 @@
   .theme-toggle:active { transform: translateY(0) scale(0.97); }
   .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  /* mobile hamburger toggle for nav links */
   .nav-toggle {
     display: none;
     flex-direction: column;
@@ -473,7 +471,6 @@
     });
   });
 
-  // drifting connected-particle background — subtle, low-alpha, sits behind all content
   (function () {
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
