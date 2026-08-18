@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+<link rel="shortcut icon" href="assets/favicon.ico">
 <style>
   :root {
     --bg: #FFFFFF;
@@ -55,38 +59,43 @@
     position: fixed;
     z-index: -2;
     border-radius: 50%;
-    filter: blur(70px);
+    filter: blur(42px);
     pointer-events: none;
     transition: opacity 0.35s ease;
+    will-change: transform;
   }
   .bg-glow-1 {
-    width: 480px;
-    height: 480px;
-    top: -140px;
-    left: -110px;
+    width: 460px;
+    height: 460px;
+    top: -130px;
+    left: -100px;
     background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-    opacity: 0.28;
-    animation: glow-float-1 42s ease-in-out infinite;
+    opacity: 0.36;
+    animation: glow-float-1 15s ease-in-out infinite;
   }
   .bg-glow-2 {
-    width: 420px;
-    height: 420px;
-    bottom: -150px;
-    right: -90px;
+    width: 400px;
+    height: 400px;
+    bottom: -140px;
+    right: -80px;
     background: radial-gradient(circle, var(--accent-deep) 0%, transparent 70%);
-    opacity: 0.22;
-    animation: glow-float-2 48s ease-in-out infinite;
+    opacity: 0.28;
+    animation: glow-float-2 18s ease-in-out infinite;
   }
-  :root[data-theme="dark"] .bg-glow-1 { opacity: 0.24; }
-  :root[data-theme="dark"] .bg-glow-2 { opacity: 0.18; }
+  :root[data-theme="dark"] .bg-glow-1 { opacity: 0.30; }
+  :root[data-theme="dark"] .bg-glow-2 { opacity: 0.22; }
 
   @keyframes glow-float-1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(70px, 90px) scale(1.18); }
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(140px, 100px) scale(1.22); }
+    66%  { transform: translate(60px, 190px) scale(0.92); }
+    100% { transform: translate(0, 0) scale(1); }
   }
   @keyframes glow-float-2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-60px, -70px) scale(1.12); }
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(-120px, -90px) scale(1.16); }
+    66%  { transform: translate(-190px, -30px) scale(0.94); }
+    100% { transform: translate(0, 0) scale(1); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -105,6 +114,8 @@
   }
 
   header {
+    position: relative;
+    z-index: 100;
     border-bottom: 2px solid var(--ink);
     background: var(--bg);
     transition: background-color 0.35s ease, border-color 0.35s ease;
@@ -327,7 +338,6 @@
   @media (max-width: 640px) {
     .hero-inner { flex-direction: column; align-items: flex-start; }
 
-    header { position: relative; }
     .nav-toggle { display: flex; }
 
     .nav-links {
@@ -476,6 +486,7 @@
     const ctx = canvas.getContext('2d');
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let w, h, particles;
+    const mouse = { x: -9999, y: -9999, active: false };
 
     function hexToRgb(hex) {
       hex = hex.replace('#', '');
@@ -496,33 +507,56 @@
     }
 
     function initParticles() {
-      const count = Math.min(55, Math.max(24, Math.floor((w * h) / 24000)));
+      const count = Math.min(85, Math.max(40, Math.floor((w * h) / 15000)));
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22,
+        vx: (Math.random() - 0.5) * 0.7,
+        vy: (Math.random() - 0.5) * 0.7,
+        r: 1.2 + Math.random() * 1.6,
+        phase: Math.random() * Math.PI * 2,
       }));
     }
 
     resize();
     initParticles();
     window.addEventListener('resize', () => { resize(); initParticles(); });
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.active = true;
+    });
+    window.addEventListener('mouseleave', () => { mouse.active = false; });
+
+    let t = 0;
 
     function draw() {
+      t += 1;
       ctx.clearRect(0, 0, w, h);
       const isDark = root.getAttribute('data-theme') === 'dark';
       const accent = getColor(isDark);
-      const dotAlpha = isDark ? 0.55 : 0.55;
-      const lineAlphaMax = isDark ? 0.22 : 0.26;
-      const dotRadius = isDark ? 1.6 : 2;
-      const linkDist = 150;
+      const lineAlphaMax = isDark ? 0.30 : 0.32;
+      const linkDist = 145;
+      const pushRadius = 110;
 
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        if (mouse.active) {
+          const dx = p.x - mouse.x, dy = p.y - mouse.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < pushRadius && d > 0.01) {
+            const force = (1 - d / pushRadius) * 0.9;
+            p.x += (dx / d) * force;
+            p.y += (dy / d) * force;
+          }
+        }
+
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+        if (p.y < -10) p.y = h + 10;
+        if (p.y > h + 10) p.y = -10;
       }
 
       for (let i = 0; i < particles.length; i++) {
@@ -541,10 +575,11 @@
         }
       }
 
-      ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${dotAlpha})`;
       for (const p of particles) {
+        const twinkle = 0.45 + 0.35 * Math.sin(t * 0.04 + p.phase);
+        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${twinkle})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, dotRadius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
       }
     }
