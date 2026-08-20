@@ -520,7 +520,20 @@
 
     resize();
     initParticles();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      // Mobile browsers fire 'resize' when the address bar hides/shows
+      // during scroll — that's a height-only change, not a real resize.
+      // Only reinitialize particles on a genuine width change (rotation,
+      // real window resize); otherwise just update canvas dimensions so
+      // the existing particles keep their positions and motion.
+      const newW = window.innerWidth;
+      resize();
+      if (newW !== lastWidth) {
+        lastWidth = newW;
+        initParticles();
+      }
+    });
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
