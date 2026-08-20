@@ -498,7 +498,7 @@
       <div class="hero-text">
         <div class="tag-line hero-anim d1">ai_cs_club</div>
         <h1 class="pixel hero-anim d2">Kairos</h1>
-        <p class="hero-anim d3">Kairos is an AI/CS club. We meet regularly, work on small projects together, and help each other learn things — algorithms, systems, whatever people are into that term. Nothing more dramatic than that.</p>
+        <p class="hero-anim d3">Kairos is an AI/CS club for people who'd rather build than just talk about it — algorithms, systems, real projects, whatever pulls you in. We're early, and we're building this to become something worth being part of.</p>
         <div class="btn-row hero-anim d4">
           <a href="#join" class="btn solid">Join</a>
           <a href="#about" class="btn">Read more</a>
@@ -512,7 +512,7 @@
       <div class="section-label reveal"><span>#</span> about</div>
       <div class="prose reveal">
         <p>The name comes from a Greek word, kairos — it roughly means "the right moment to do something," as opposed to time just passing by. It felt like a fitting name for a club built around actually sitting down and building things, rather than just talking about them.</p>
-        <p>We're not a huge organisation and we don't run a big calendar of events. It's mostly regular sessions, some pair-programming, occasional talks from people in the club, and a shared Discord/group where questions get asked and answered.</p>
+        <p>Right now, that means regular build sessions, pair programming, and honest conversations about what people are working on — the kind of things a small, early group can actually do well. But the direction is bigger: bringing in outside speakers, running real competitions, and growing this into a community people actively want to be part of, not just another group chat.</p>
       </div>
     </div>
   </section>
@@ -525,28 +525,42 @@
           <div class="idx">01</div>
           <div>
             <h3>Build sessions</h3>
-            <p>Small, informal sessions where a few people sit down and work on a project together — nothing polished, just working code by the end.</p>
+            <p>Regular sessions where a few of us sit down and build something real, start to finish — no half-finished tutorials, just working code by the end.</p>
           </div>
         </div>
         <div class="term-item reveal reveal-delay-1">
           <div class="idx">02</div>
           <div>
             <h3>Problem solving practice</h3>
-            <p>Some members practice competitive programming together and occasionally take part in contests as a group.</p>
+            <p>Competitive programming practice together, with an eye on actually entering contests as a group rather than everyone grinding alone.</p>
           </div>
         </div>
         <div class="term-item reveal reveal-delay-2">
           <div class="idx">03</div>
           <div>
             <h3>Systems &amp; low-level stuff</h3>
-            <p>For people who want to go a level under the usual coursework — how things actually run under the hood.</p>
+            <p>For people who want to go a level under the usual coursework — how things actually run under the hood, not just how to call the API.</p>
           </div>
         </div>
         <div class="term-item reveal reveal-delay-3">
           <div class="idx">04</div>
           <div>
             <h3>Open source</h3>
-            <p>Looking into contributing to existing projects, and maybe maintaining a couple of our own down the line.</p>
+            <p>Contributing to existing projects now, with the goal of maintaining a couple of our own once the club has the hands for it.</p>
+          </div>
+        </div>
+        <div class="term-item reveal reveal-delay-4">
+          <div class="idx">05</div>
+          <div>
+            <h3>Guest sessions</h3>
+            <p>We're working on bringing in people already working in the field — engineers, researchers, founders — for honest Q&amp;As, not polished keynotes.</p>
+          </div>
+        </div>
+        <div class="term-item reveal reveal-delay-4">
+          <div class="idx">06</div>
+          <div>
+            <h3>Competitions &amp; hackathons</h3>
+            <p>The plan is to enter these as a club, and eventually run one ourselves — early days, but that's the direction we're building toward.</p>
           </div>
         </div>
       </div>
@@ -660,7 +674,20 @@
 
     resize();
     initParticles();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      // Mobile browsers fire 'resize' when the address bar hides/shows
+      // during scroll — that's a height-only change, not a real resize.
+      // Only reinitialize particles on a genuine width change (rotation,
+      // real window resize); otherwise just update canvas dimensions so
+      // the existing particles keep their positions and motion.
+      const newW = window.innerWidth;
+      resize();
+      if (newW !== lastWidth) {
+        lastWidth = newW;
+        initParticles();
+      }
+    });
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
