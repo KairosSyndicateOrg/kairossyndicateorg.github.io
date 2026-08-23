@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
     rel="stylesheet"
   >
 
@@ -21,23 +21,25 @@
 
   <style>
     :root {
-      --bg: #FFFFFF;
-      --bg-alt: #FAFAFA;
-      --ink: #0A0A0A;
-      --ink-soft: #666666;
-      --line: #EAEAEA;
-      --accent: #5E6AD2;
-      --accent-deep: #5E6AD2;
+      --bg: #F4FAF3;
+      --bg-alt: #E7F2E5;
+      --ink: #102414;
+      --ink-soft: #49634C;
+      --line: #C4D5C5;
+      --accent: #147A39;
+      --accent-deep: #0B4D26;
+      --danger: #A43E3E;
     }
 
     :root[data-theme="dark"] {
-      --bg: #0A0A0A;
-      --bg-alt: #111111;
-      --ink: #F5F5F5;
-      --ink-soft: #A1A1A1;
-      --line: #272727;
-      --accent: #5E6AD2;
-      --accent-deep: #5E6AD2;
+      --bg: #080D09;
+      --bg-alt: #0E1710;
+      --ink: #D9F7D0;
+      --ink-soft: #8BA889;
+      --line: #263A2A;
+      --accent: #55FF88;
+      --accent-deep: #20C967;
+      --danger: #FF7777;
     }
 
     * {
@@ -51,8 +53,8 @@
     }
 
     ::-webkit-scrollbar {
-      width: 9px;
-      height: 9px;
+      width: 10px;
+      height: 10px;
     }
 
     ::-webkit-scrollbar-track {
@@ -79,22 +81,31 @@
     }
 
     body {
+      position: relative;
+      min-height: 100vh;
       margin: 0;
+      overflow-x: hidden;
       background: var(--bg);
       color: var(--ink);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: 'IBM Plex Mono', monospace;
       font-size: 15px;
-      letter-spacing: -0.01em;
       transition:
         background 0.35s ease,
         color 0.35s ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 3px,
+        rgba(120, 255, 150, 0.035) 4px
+      );
     }
 
     a {
@@ -103,23 +114,19 @@
 
     ::selection {
       background: var(--accent);
-      color: #FFFFFF;
+      color: var(--bg);
     }
 
     .wrap {
       width: 100%;
-      max-width: 920px;
+      max-width: 880px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 20px;
     }
 
     .pixel {
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        sans-serif;
-      line-height: 1.1;
+      font-family: 'Press Start 2P', monospace;
+      line-height: 1.6;
     }
 
     #bgCanvas,
@@ -133,9 +140,8 @@
     }
 
     #bgCanvas {
-      z-index: -1;
-      opacity: 0.18;
-      filter: grayscale(1);
+      z-index: 0;
+      opacity: 0.38;
     }
 
     #fgCanvas {
@@ -143,7 +149,59 @@
     }
 
     .bg-glow {
-      display: none;
+      position: fixed;
+      z-index: -1;
+      border-radius: 50%;
+      filter: blur(55px);
+      pointer-events: none;
+    }
+
+    .bg-glow-1 {
+      width: 360px;
+      height: 360px;
+      top: -150px;
+      left: -100px;
+      background: radial-gradient(
+        circle,
+        var(--accent) 0%,
+        transparent 70%
+      );
+      opacity: 0.10;
+      animation: glow-float-1 18s ease-in-out infinite;
+    }
+
+    .bg-glow-2 {
+      width: 320px;
+      height: 320px;
+      right: -100px;
+      bottom: -120px;
+      background: radial-gradient(
+        circle,
+        var(--accent-deep) 0%,
+        transparent 70%
+      );
+      opacity: 0.08;
+      animation: glow-float-2 20s ease-in-out infinite;
+    }
+
+    @keyframes glow-float-1 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(120px, 140px) scale(1.15);
+      }
+    }
+
+    @keyframes glow-float-2 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(-130px, -90px) scale(1.15);
+      }
     }
 
     .scroll-progress {
@@ -152,8 +210,9 @@
       left: 0;
       z-index: 200;
       width: 0%;
-      height: 2px;
+      height: 3px;
       background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
       transition: width 0.08s linear;
     }
 
@@ -165,24 +224,20 @@
         var(--bg) 92%,
         transparent
       );
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(12px);
-      transition:
-        background-color 0.35s ease,
-        border-color 0.35s ease;
+      border-bottom: 1px solid var(--accent);
+      backdrop-filter: blur(10px);
     }
 
     nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 0;
+      padding: 15px 0;
     }
 
     .navbrand {
       display: flex;
       align-items: center;
-      gap: 10px;
     }
 
     .navbrand a {
@@ -190,10 +245,14 @@
     }
 
     .navbrand span {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      color: var(--accent);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      text-shadow: 0 0 10px color-mix(
+        in srgb,
+        var(--accent) 45%,
+        transparent
+      );
     }
 
     .nav-links {
@@ -202,62 +261,62 @@
       margin: 0;
       padding: 0;
       color: var(--ink-soft);
-      font-family: 'IBM Plex Mono', monospace;
       font-size: 12px;
     }
 
     .nav-links li + li {
-      margin-left: 24px;
+      margin-left: 22px;
     }
 
     .nav-links a {
       position: relative;
-      padding-bottom: 4px;
+      padding-bottom: 3px;
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
+    .nav-links a::before {
+      content: "[";
+      margin-right: 2px;
+      color: transparent;
+      transition: color 0.2s ease;
+    }
+
     .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 1px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.25s ease;
+      content: "]";
+      margin-left: 2px;
+      color: transparent;
+      transition: color 0.2s ease;
     }
 
     .nav-links a:hover {
-      color: var(--ink);
+      color: var(--accent);
     }
 
+    .nav-links a:hover::before,
     .nav-links a:hover::after {
-      transform: scaleX(1);
-      transform-origin: left;
+      color: var(--accent);
     }
 
     .theme-toggle {
-      padding: 7px 10px;
-      background: var(--bg);
-      color: var(--ink-soft);
-      border: 1px solid var(--line);
-      border-radius: 4px;
+      padding: 6px 10px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       cursor: pointer;
       transition:
         background-color 0.2s ease,
         color 0.2s ease,
-        border-color 0.2s ease;
+        transform 0.15s ease;
     }
 
     .theme-toggle:hover {
-      background: var(--ink);
-      border-color: var(--ink);
+      background: var(--accent);
       color: var(--bg);
+      transform: translateY(-1px);
     }
 
     .nav-toggle {
@@ -277,7 +336,7 @@
       display: block;
       width: 100%;
       height: 2px;
-      background: var(--ink);
+      background: var(--accent);
       transition:
         transform 0.25s ease,
         opacity 0.2s ease;
@@ -303,8 +362,10 @@
     }
 
     .hero {
-      padding: 112px 0 100px;
-      border-bottom: 1px solid var(--line);
+      position: relative;
+      z-index: 2;
+      padding: 70px 0 64px;
+      border-bottom: 1px dashed var(--line);
     }
 
     .hero-inner {
@@ -317,14 +378,13 @@
     .hero-text {
       flex: 1;
       min-width: 260px;
-      max-width: 680px;
+      max-width: 650px;
     }
 
     .tag-line {
-      margin-bottom: 22px;
+      margin-bottom: 14px;
       color: var(--accent);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.04em;
     }
 
@@ -335,11 +395,12 @@
     .tag-line::after {
       content: "";
       display: inline-block;
-      width: 6px;
-      height: 11px;
+      width: 7px;
+      height: 13px;
       margin-left: 4px;
       background: var(--accent);
       vertical-align: -2px;
+      box-shadow: 0 0 8px var(--accent);
       animation: blink-cursor 1s steps(1) infinite;
     }
 
@@ -354,19 +415,20 @@
     }
 
     h1.pixel {
-      margin: 0 0 28px;
-      color: var(--ink);
-      font-size: clamp(44px, 8vw, 72px);
-      font-weight: 600;
-      letter-spacing: -0.07em;
-      line-height: 0.95;
+      margin: 0 0 22px;
+      color: var(--accent);
+      font-size: clamp(28px, 6vw, 48px);
+      text-shadow: 0 0 14px color-mix(
+        in srgb,
+        var(--accent) 28%,
+        transparent
+      );
     }
 
     .hero p {
       max-width: 58ch;
-      margin: 0 0 28px;
+      margin: 0 0 24px;
       color: var(--ink-soft);
-      font-size: 16px;
       line-height: 1.8;
     }
 
@@ -408,11 +470,11 @@
     .btn {
       position: relative;
       overflow: hidden;
-      padding: 11px 16px;
-      background: var(--bg);
-      color: var(--ink);
-      border: 1px solid var(--ink);
-      border-radius: 4px;
+      padding: 10px 15px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 12px;
       font-weight: 500;
@@ -434,7 +496,7 @@
       background: linear-gradient(
         120deg,
         transparent,
-        rgba(255, 255, 255, 0.28),
+        rgba(255, 255, 255, 0.25),
         transparent
       );
       transform: skewX(-20deg);
@@ -447,29 +509,32 @@
     }
 
     .btn:hover {
-      background: var(--ink);
+      background: var(--accent);
       color: var(--bg);
       transform: translateY(-1px);
     }
 
-    .btn:active {
-      transform: translateY(0);
-    }
-
     .btn.solid {
-      background: var(--ink);
+      background: var(--accent);
       color: var(--bg);
+      box-shadow: 0 0 12px color-mix(
+        in srgb,
+        var(--accent) 20%,
+        transparent
+      );
     }
 
     .btn.solid:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #FFFFFF;
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
     }
 
     section {
-      padding: 88px 0;
-      border-bottom: 1px solid var(--line);
+      position: relative;
+      z-index: 2;
+      padding: 58px 0;
+      border-bottom: 1px dashed var(--line);
     }
 
     section:last-of-type {
@@ -477,13 +542,12 @@
     }
 
     .section-label {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
       color: var(--ink);
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
     }
 
     .section-label span {
@@ -491,9 +555,9 @@
     }
 
     .prose {
-      max-width: 62ch;
+      max-width: 65ch;
       color: var(--ink-soft);
-      line-height: 1.85;
+      line-height: 1.8;
     }
 
     .prose p {
@@ -501,19 +565,19 @@
     }
 
     .prose p + p {
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .term-list {
-      margin-top: 40px;
+      margin-top: 28px;
     }
 
     .term-item {
       position: relative;
       display: flex;
-      gap: 18px;
+      gap: 16px;
       margin: 0;
-      padding: 22px 0;
+      padding: 17px 10px;
       border-top: 1px solid var(--line);
       transition:
         background-color 0.2s ease,
@@ -525,52 +589,87 @@
     }
 
     .term-item::before {
-      display: none;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--accent) 8%, transparent),
+        transparent 70%
+      );
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .term-item:hover::before {
+      opacity: 1;
     }
 
     .term-item:hover {
-      background: var(--bg-alt);
-      transform: none;
+      transform: translateX(4px);
+    }
+
+    .term-item > div {
+      position: relative;
     }
 
     .term-item .idx {
       flex-shrink: 0;
-      width: 36px;
+      width: 34px;
       color: var(--accent);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .term-item:hover .idx {
-      transform: none;
+      font-size: 13px;
     }
 
     .term-item h3 {
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       color: var(--ink);
-      font-family: Inter, sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: -0.02em;
     }
 
     .term-item p {
-      max-width: 65ch;
       margin: 0;
       color: var(--ink-soft);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.7;
     }
 
     .join-box {
+      position: relative;
       display: flex;
       flex-direction: column;
-      gap: 28px;
-      padding: 36px;
-      background: transparent;
-      border: 1px solid var(--line);
-      border-radius: 6px;
+      gap: 24px;
+      padding: 26px 24px;
+      background: color-mix(
+        in srgb,
+        var(--bg-alt) 80%,
+        transparent
+      );
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      box-shadow:
+        0 0 0 1px color-mix(
+          in srgb,
+          var(--accent) 12%,
+          transparent
+        ),
+        inset 0 0 24px color-mix(
+          in srgb,
+          var(--accent) 3%,
+          transparent
+        );
+    }
+
+    .join-box::before {
+      content: "terminal://join";
+      position: absolute;
+      top: -9px;
+      left: 16px;
+      padding: 0 8px;
+      background: var(--bg);
+      color: var(--accent);
+      font-size: 11px;
     }
 
     .join-intro {
@@ -578,24 +677,24 @@
     }
 
     .join-box .pixel {
+      color: var(--accent);
       font-family: 'IBM Plex Mono', monospace;
       font-size: 12px !important;
-      font-weight: 500;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
     }
 
     .join-box p {
       margin: 8px 0 0;
       color: var(--ink-soft);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.7;
     }
 
     .join-form {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
+      gap: 16px;
     }
 
     .join-form .field:nth-child(n + 3) {
@@ -611,23 +710,21 @@
     .field {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .field label {
       color: var(--ink-soft);
-      font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
-      letter-spacing: 0.02em;
     }
 
     .field input,
     .field textarea {
-      padding: 12px;
+      padding: 10px;
       background: var(--bg);
       color: var(--ink);
       border: 1px solid var(--line);
-      border-radius: 4px;
+      border-radius: 2px;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 13px;
       resize: vertical;
@@ -637,9 +734,15 @@
         background-color 0.2s ease;
     }
 
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--ink-soft);
+      opacity: 0.55;
+    }
+
     .field input:hover,
     .field textarea:hover {
-      border-color: #BDBDBD;
+      border-color: var(--accent);
     }
 
     .field input:focus,
@@ -648,7 +751,7 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 3px color-mix(
         in srgb,
-        var(--accent) 12%,
+        var(--accent) 15%,
         transparent
       );
     }
@@ -656,7 +759,7 @@
     .join-status {
       grid-column: 1 / -1;
       min-height: 1.4em;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .join-status.ok {
@@ -664,7 +767,7 @@
     }
 
     .join-status.err {
-      color: #B74355;
+      color: var(--danger);
     }
 
     .join-status:not(:empty) {
@@ -685,20 +788,11 @@
 
     footer {
       position: relative;
-      margin-top: 0;
-      padding: 72px 0 56px;
-      background: var(--bg);
-      overflow: hidden;
-    }
-
-    footer::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      height: 1px;
-      background: var(--line);
+      z-index: 2;
+      margin-top: 8px;
+      padding: 46px 0 40px;
+      background: var(--bg-alt);
+      border-top: 1px solid var(--line);
     }
 
     .footer-row {
@@ -718,9 +812,8 @@
       align-items: baseline;
       gap: 7px;
       margin: 0 0 10px;
-      font-family: 'IBM Plex Mono', monospace;
+      color: var(--ink);
       font-size: 12px;
-      letter-spacing: 0.03em;
     }
 
     .footer-mark .prompt {
@@ -728,44 +821,14 @@
     }
 
     .footer-mark strong {
-      position: relative;
-      color: var(--ink);
-      border-bottom: 1px dotted var(--line);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: help;
-    }
-
-    .footer-mark strong::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 0;
-      padding: 6px 10px;
-      background: var(--ink);
-      color: var(--bg);
-      border-radius: 2px;
-      font-size: 11px;
-      line-height: 1.4;
-      white-space: nowrap;
-      opacity: 0;
-      transform: translateY(4px);
-      pointer-events: none;
-      transition:
-        opacity 0.2s ease,
-        transform 0.2s ease;
-    }
-
-    .footer-mark strong:hover::after,
-    .footer-mark strong:focus-visible::after {
-      opacity: 1;
-      transform: translateY(0);
+      color: var(--accent);
+      font-weight: 500;
     }
 
     .footer-note {
       margin: 0;
       color: var(--ink-soft);
-      font-size: 13px;
+      font-size: 12px;
       line-height: 1.7;
     }
 
@@ -773,7 +836,6 @@
       display: flex;
       align-items: center;
       gap: 20px;
-      flex-shrink: 0;
     }
 
     .footer-status {
@@ -781,7 +843,7 @@
       align-items: center;
       gap: 8px;
       color: var(--ink-soft);
-      font-size: 12px;
+      font-size: 11px;
       white-space: nowrap;
     }
 
@@ -790,6 +852,7 @@
       height: 7px;
       background: var(--accent);
       border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
       animation: status-pulse 2.2s ease-out infinite;
     }
 
@@ -822,23 +885,20 @@
     .footer-top-link {
       display: inline-flex;
       align-items: center;
-      padding: 7px 11px;
-      color: var(--ink);
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      font-family: 'IBM Plex Mono', monospace;
+      padding: 6px 10px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
       font-size: 11px;
       text-decoration: none;
       transition:
         color 0.2s ease,
         background-color 0.2s ease,
-        border-color 0.2s ease,
         transform 0.2s ease;
     }
 
     .footer-top-link:hover {
-      background: var(--ink);
-      border-color: var(--ink);
+      background: var(--accent);
       color: var(--bg);
       transform: translateY(-2px);
     }
@@ -877,6 +937,10 @@
         scroll-behavior: auto;
       }
 
+      .bg-glow {
+        animation: none;
+      }
+
       .hero-anim,
       .reveal {
         opacity: 1;
@@ -896,16 +960,12 @@
     }
 
     @media (max-width: 640px) {
-      .wrap {
-        padding: 0 20px;
-      }
-
       .hero {
-        padding: 80px 0 72px;
+        padding: 62px 0 54px;
       }
 
       section {
-        padding: 64px 0;
+        padding: 50px 0;
       }
 
       .nav-toggle {
@@ -922,7 +982,7 @@
         padding: 0 20px;
         overflow: hidden;
         background: var(--bg);
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid var(--accent);
         opacity: 0;
         transition:
           max-height 0.3s ease,
@@ -939,10 +999,6 @@
       .nav-links li + li {
         margin-top: 14px;
         margin-left: 0;
-      }
-
-      .join-box {
-        padding: 24px 20px;
       }
 
       .join-form {
@@ -970,7 +1026,11 @@
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
   <canvas id="fgCanvas" aria-hidden="true"></canvas>
 
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
   <div id="top"></div>
+
   <div
     class="scroll-progress"
     id="scrollProgress"
@@ -982,7 +1042,7 @@
       <nav>
         <div class="navbrand">
           <a href="index.html">
-            <span>KAIROS SYNDICATE</span>
+            <span>KAIROS_SYNDICATE</span>
           </a>
         </div>
 
@@ -999,7 +1059,7 @@
             id="themeToggle"
             type="button"
           >
-            dark mode
+            light mode
           </button>
 
           <button
@@ -1024,7 +1084,7 @@
       <div class="wrap hero-inner">
         <div class="hero-text">
           <div class="tag-line hero-anim d1">
-            ai_cs_club
+            booting_kairos...
           </div>
 
           <h1 class="pixel hero-anim d2">
@@ -1032,19 +1092,18 @@
           </h1>
 
           <p class="hero-anim d3">
-            Kairos is an AI/CS club for people who'd rather build than just
-            talk about it — algorithms, systems, real projects, whatever pulls
-            you in. We're early, and we're building this to become something
-            worth being part of.
+            An AI/CS club for people who would rather build than just talk
+            about it. Algorithms, systems, experiments, and real projects —
+            whatever pulls you in.
           </p>
 
           <div class="btn-row hero-anim d4">
             <a href="#join" class="btn solid">
-              Join
+              ./join
             </a>
 
             <a href="#about" class="btn">
-              Read more
+              cat about.txt
             </a>
           </div>
         </div>
@@ -1061,18 +1120,20 @@
           <p>
             The name comes from a Greek word, kairos — it roughly means
             "the right moment to do something," as opposed to time just
-            passing by. It felt like a fitting name for a club built around
-            actually sitting down and building things, rather than just
-            talking about them.
+            passing by.
           </p>
 
           <p>
-            Right now, that means regular build sessions, pair programming,
-            and honest conversations about what people are working on — the
-            kind of things a small, early group can actually do well. But the
-            direction is bigger: bringing in outside speakers, running real
-            competitions, and growing this into a community people actively
-            want to be part of, not just another group chat.
+            It felt like a fitting name for a club built around actually
+            sitting down and building things. Right now, that means regular
+            build sessions, pair programming, and honest conversations about
+            what people are working on.
+          </p>
+
+          <p>
+            We are still early, but the goal is bigger: a community that
+            builds together, solves meaningful problems, enters competitions,
+            contributes to open source, and creates things worth sharing.
           </p>
         </div>
       </div>
@@ -1081,7 +1142,7 @@
     <section id="do">
       <div class="wrap">
         <div class="section-label reveal">
-          <span>#</span> what we do
+          <span>#</span> what_we_do
         </div>
 
         <div class="term-list">
@@ -1093,8 +1154,7 @@
 
               <p>
                 Regular sessions where a few of us sit down and build
-                something real, start to finish — no half-finished tutorials,
-                just working code by the end.
+                something real, start to finish.
               </p>
             </div>
           </div>
@@ -1106,9 +1166,8 @@
               <h3>Problem solving practice</h3>
 
               <p>
-                Competitive programming practice together, with an eye on
-                actually entering contests as a group rather than everyone
-                grinding alone.
+                Competitive programming practice together, with the goal of
+                entering contests as a group.
               </p>
             </div>
           </div>
@@ -1117,12 +1176,11 @@
             <div class="idx">03</div>
 
             <div>
-              <h3>Systems &amp; low-level stuff</h3>
+              <h3>Systems and low-level work</h3>
 
               <p>
-                For people who want to go a level under the usual coursework —
-                how things actually run under the hood, not just how to call
-                the API.
+                Understanding how things really run under the hood instead of
+                only learning how to call an API.
               </p>
             </div>
           </div>
@@ -1134,9 +1192,8 @@
               <h3>Open source</h3>
 
               <p>
-                Contributing to existing projects now, with the goal of
-                maintaining a couple of our own once the club has the hands
-                for it.
+                Contributing to existing projects and eventually maintaining
+                projects of our own.
               </p>
             </div>
           </div>
@@ -1148,9 +1205,8 @@
               <h3>Guest sessions</h3>
 
               <p>
-                We're working on bringing in people already working in the
-                field — engineers, researchers, founders — for honest Q&amp;As,
-                not polished keynotes.
+                Honest conversations with engineers, researchers, founders,
+                and people working in the field.
               </p>
             </div>
           </div>
@@ -1159,12 +1215,11 @@
             <div class="idx">06</div>
 
             <div>
-              <h3>Competitions &amp; hackathons</h3>
+              <h3>Competitions and hackathons</h3>
 
               <p>
-                The plan is to enter these as a club, and eventually run one
-                ourselves — early days, but that's the direction we're
-                building toward.
+                Entering competitions together and eventually organising one
+                ourselves.
               </p>
             </div>
           </div>
@@ -1181,11 +1236,11 @@
         <div class="join-box reveal">
           <div class="join-intro">
             <div class="pixel">
-              no application needed
+              no_application_required
             </div>
 
             <p>
-              Leave your details and tell us how we can build together.
+              Tell us a little about yourself and what you want to build.
             </p>
           </div>
 
@@ -1269,7 +1324,7 @@
                 id="joinProblem"
                 name="problem"
                 rows="4"
-                placeholder="It could be a technical, academic, campus, or community problem."
+                placeholder="Describe a technical, academic, campus, or community problem."
               ></textarea>
             </div>
 
@@ -1277,7 +1332,7 @@
               type="submit"
               class="btn solid"
             >
-              Submit
+              submit_request
             </button>
 
             <div
@@ -1298,28 +1353,24 @@
         <div class="footer-mark">
           <span class="prompt" aria-hidden="true">$</span>
 
-          <strong
-            data-tooltip="kairos (n.) — the right moment to act"
-            tabindex="0"
-          >
+          <strong>
             kairos_syndicate
           </strong>
         </div>
 
         <p class="footer-note">
-          Started by a few people who'd rather build than wait for permission —
-          still small, still early, still shipping.
+          small team // early stage // building in the open
         </p>
       </div>
 
       <div class="footer-meta">
         <div class="footer-status">
           <span class="status-dot" aria-hidden="true"></span>
-          building in the open
+          system_status: online
         </div>
 
         <a href="#top" class="footer-top-link">
-          back to top ↑
+          cd ~
         </a>
       </div>
     </div>
@@ -1361,7 +1412,7 @@
     updateScrollProgress();
 
     /*
-     * Subtle button movement
+     * Buttons
      */
     const prefersReducedMotion =
       window.matchMedia(
@@ -1385,7 +1436,7 @@
             rect.height / 2;
 
           button.style.transform =
-            `translate(${x * 0.10}px, ${y * 0.16}px)`;
+            `translate(${x * 0.12}px, ${y * 0.18}px)`;
         });
 
         button.addEventListener('mouseleave', () => {
@@ -1411,12 +1462,16 @@
         'data-theme',
         savedTheme
       );
+    }
 
+    function updateThemeButton() {
       themeToggle.textContent =
-        savedTheme === 'dark'
+        root.getAttribute('data-theme') === 'dark'
           ? 'light mode'
           : 'dark mode';
     }
+
+    updateThemeButton();
 
     themeToggle.addEventListener('click', () => {
       const nextTheme =
@@ -1434,10 +1489,7 @@
         nextTheme
       );
 
-      themeToggle.textContent =
-        nextTheme === 'dark'
-          ? 'light mode'
-          : 'dark mode';
+      updateThemeButton();
     });
 
     /*
@@ -1477,7 +1529,7 @@
     });
 
     /*
-     * Smooth cursor fade
+     * Smooth cursor fade over form and at page bottom
      */
     let targetCursorOpacity = 1;
     let cursorOpacity = 1;
@@ -1583,7 +1635,7 @@
             .trim();
 
         return hexToRgb(
-          color || '#5E6AD2'
+          color || '#55FF88'
         );
       }
 
@@ -1602,10 +1654,10 @@
       function createParticles() {
         const count =
           Math.min(
-            65,
+            70,
             Math.max(
-              32,
-              Math.floor((width * height) / 22000)
+              35,
+              Math.floor((width * height) / 19000)
             )
           );
 
@@ -1615,9 +1667,9 @@
             () => ({
               x: Math.random() * width,
               y: Math.random() * height,
-              vx: (Math.random() - 0.5) * 0.35,
-              vy: (Math.random() - 0.5) * 0.35,
-              r: 1 + Math.random() * 1.2,
+              vx: (Math.random() - 0.5) * 0.45,
+              vy: (Math.random() - 0.5) * 0.45,
+              r: 1.1 + Math.random() * 1.5,
               phase: Math.random() * Math.PI * 2
             })
           );
@@ -1678,7 +1730,7 @@
         );
 
         /*
-         * Smoothly approach the target opacity.
+         * Smoothly fade cursor
          */
         cursorOpacity +=
           (targetCursorOpacity - cursorOpacity) *
@@ -1687,13 +1739,14 @@
         const accent =
           getAccentColor();
 
-        const lineOpacity =
-          root.getAttribute('data-theme') === 'dark'
-            ? 0.08
-            : 0.06;
+        const isDark =
+          root.getAttribute('data-theme') === 'dark';
 
-        const linkDistance = 120;
-        const pushRadius = 90;
+        const lineOpacity =
+          isDark ? 0.17 : 0.11;
+
+        const linkDistance = 135;
+        const pushRadius = 105;
 
         for (const particle of particles) {
           particle.x += particle.vx;
@@ -1715,7 +1768,7 @@
             ) {
               const force =
                 (1 - distance / pushRadius) *
-                0.45;
+                0.65;
 
               particle.x +=
                 (dx / distance) * force;
@@ -1785,8 +1838,8 @@
 
         for (const particle of particles) {
           const twinkle =
-            0.22 +
-            0.12 *
+            0.35 +
+            0.25 *
             Math.sin(
               animationTime * 0.04 +
               particle.phase
@@ -1809,14 +1862,14 @@
         }
 
         /*
-         * Very subtle signal pulses
+         * Data pulses
          */
         pulseTimer++;
 
         if (
-          pulseTimer > 75 &&
+          pulseTimer > 60 &&
           activeEdges.length &&
-          pulses.length < 3
+          pulses.length < 5
         ) {
           pulseTimer = 0;
 
@@ -1839,7 +1892,7 @@
           const pulse =
             pulses[i];
 
-          pulse.progress += 0.014;
+          pulse.progress += 0.016;
 
           if (pulse.progress >= 1) {
             pulses.splice(i, 1);
@@ -1862,14 +1915,14 @@
             );
 
           ctx.fillStyle =
-            `rgba(${accent.r},${accent.g},${accent.b},${0.35 * fade})`;
+            `rgba(${accent.r},${accent.g},${accent.b},${0.8 * fade})`;
 
           ctx.beginPath();
 
           ctx.arc(
             x,
             y,
-            1.4,
+            2,
             0,
             Math.PI * 2
           );
@@ -1878,7 +1931,7 @@
         }
 
         /*
-         * Cursor movement and probe connections
+         * Cursor probe
          */
         if (mouse.active) {
           cursorX +=
@@ -1898,7 +1951,7 @@
             cursorTrail.shift();
           }
 
-          const probeRadius = 145;
+          const probeRadius = 160;
 
           for (const particle of particles) {
             const dx =
@@ -1913,7 +1966,7 @@
             if (distance < probeRadius) {
               const alpha =
                 (1 - distance / probeRadius) *
-                0.12 *
+                0.28 *
                 cursorOpacity;
 
               ctx.strokeStyle =
@@ -1932,7 +1985,7 @@
         }
 
         /*
-         * Soft cursor trail
+         * Cursor trail
          */
         if (cursorTrail.length > 1) {
           foregroundContext.save();
@@ -1959,7 +2012,7 @@
           }
 
           foregroundContext.strokeStyle =
-            `rgba(${accent.r},${accent.g},${accent.b},0.16)`;
+            `rgba(${accent.r},${accent.g},${accent.b},0.42)`;
 
           foregroundContext.lineWidth = 1;
           foregroundContext.lineCap = 'round';
@@ -1969,7 +2022,7 @@
         }
 
         /*
-         * Elegant cursor ring
+         * Elegant terminal cursor ring
          */
         if (cursorTrail.length) {
           const head =
@@ -1978,9 +2031,9 @@
             ];
 
           const pulse =
-            0.45 +
+            0.55 +
             Math.sin(animationTime * 0.06) *
-            0.10;
+            0.15;
 
           foregroundContext.save();
 
@@ -1996,11 +2049,8 @@
             animationTime * 0.008
           );
 
-          /*
-           * Main ring
-           */
           foregroundContext.strokeStyle =
-            `rgba(${accent.r},${accent.g},${accent.b},0.72)`;
+            `rgba(${accent.r},${accent.g},${accent.b},0.95)`;
 
           foregroundContext.lineWidth = 1;
 
@@ -2009,16 +2059,13 @@
           foregroundContext.arc(
             0,
             0,
-            7,
+            7.5,
             0,
             Math.PI * 2
           );
 
           foregroundContext.stroke();
 
-          /*
-           * Broken outer orbit
-           */
           foregroundContext.strokeStyle =
             `rgba(${accent.r},${accent.g},${accent.b},${pulse})`;
 
@@ -2027,9 +2074,9 @@
           foregroundContext.arc(
             0,
             0,
-            10,
-            -0.65,
-            0.65
+            11,
+            -0.7,
+            0.7
           );
 
           foregroundContext.stroke();
@@ -2039,9 +2086,9 @@
           foregroundContext.arc(
             0,
             0,
-            10,
-            Math.PI - 0.65,
-            Math.PI + 0.65
+            11,
+            Math.PI - 0.7,
+            Math.PI + 0.7
           );
 
           foregroundContext.stroke();
@@ -2063,7 +2110,7 @@
     })();
 
     /*
-     * Reveal sections
+     * Reveal animations
      */
     const revealElements =
       document.querySelectorAll('.reveal');
@@ -2089,7 +2136,7 @@
     });
 
     /*
-     * Join form
+     * Join form submission
      */
     const SHEET_ENDPOINT =
       'https://script.google.com/macros/s/AKfycbwnXRhjJ8tuCws056VIjyGcy-snSQbNOI2wilMxpAg3n51Y4QthXj28ledDkpTQQLEd/exec';
@@ -2197,7 +2244,7 @@
         });
 
         joinStatus.textContent =
-          "got it — we'll be in touch.";
+          'request_received // we will be in touch';
 
         joinStatus.className =
           'join-status ok';
@@ -2205,7 +2252,7 @@
         joinForm.reset();
       } catch (error) {
         joinStatus.textContent =
-          'something went wrong — try again in a bit.';
+          'error // please try again later';
 
         joinStatus.className =
           'join-status err';
