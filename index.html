@@ -13,28 +13,46 @@
 <link rel="shortcut icon" href="assets/favicon.ico">
 <style>
   :root {
-    --bg: #FFFFFF;
-    --bg-alt: #F2F7FA;
-    --ink: #0B2A42;
-    --ink-soft: #3E5A6C;
-    --line: #C9D8DE;
-    --accent: #1E7FA6;
-    --accent-deep: #0B2A42;
+    --bg: #FFFDF9;
+    --bg-alt: #F7F1E8;
+    --ink: #2B2118;
+    --ink-soft: #6E5D4C;
+    --line: #E3D6C4;
+    --accent: #C4661F;
+    --accent-deep: #2B2118;
   }
 
   :root[data-theme="dark"] {
-    --bg: #0A0A0A;
-    --bg-alt: #151515;
-    --ink: #EDEDED;
-    --ink-soft: #9B9B9B;
-    --line: #2B2B2B;
-    --accent: #4FB8E0;
-    --accent-deep: #EDEDED;
+    --bg: #120E0A;
+    --bg-alt: #1C1611;
+    --ink: #F5EDE1;
+    --ink-soft: #C9B8A3;
+    --line: #3A2F26;
+    --accent: #E08A3E;
+    --accent-deep: #F5EDE1;
   }
 
   * { box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    border-radius: 999px;
+    border: 2.5px solid var(--bg);
+    background-clip: padding-box;
+    transition: background-color 0.2s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent);
+  }
+  ::-webkit-scrollbar-corner { background: transparent; }
 
   body {
     margin: 0;
@@ -360,7 +378,7 @@
     margin: 0 0 6px;
     color: var(--ink);
   }
-  .term-item p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.6; }
+  .term-item p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
 
   .join-box {
     border: 2px solid var(--ink);
@@ -440,63 +458,92 @@
   }
 
   footer {
-    padding: 40px 0 44px;
-    margin-top: 4px;
-    background: var(--bg-alt);
+    position: relative;
+    margin-top: 8px;
+    padding: 46px 0 40px;
+    background:
+      radial-gradient(640px 220px at 12% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%),
+      var(--bg-alt);
     transition: background-color 0.35s ease;
+    overflow: hidden;
+  }
+  footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 45%, transparent), transparent 55%);
   }
   .footer-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
-    gap: 14px;
-    font-size: 12.5px;
-    color: var(--ink);
+    gap: 22px 28px;
   }
-  .footer-note {
-    max-width: 46ch;
-    line-height: 1.65;
+  .footer-brand { max-width: 48ch; }
+  .footer-mark {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    margin: 0 0 10px;
   }
-  .footer-note strong {
+  .footer-mark .prompt { color: var(--accent); }
+  .footer-mark strong {
     color: var(--ink);
     font-weight: 600;
+    font-size: 13px;
     position: relative;
     cursor: help;
     border-bottom: 1px dotted var(--ink-soft);
   }
-  .footer-note strong::after {
+  .footer-mark strong::after {
     content: attr(data-tooltip);
     position: absolute;
     left: 0;
-    bottom: calc(100% + 9px);
+    bottom: calc(100% + 10px);
     background: var(--ink);
     color: var(--bg);
     padding: 6px 10px;
     font-size: 11px;
     line-height: 1.4;
     white-space: nowrap;
+    border-radius: 2px;
     opacity: 0;
     transform: translateY(4px);
     transition: opacity 0.2s ease, transform 0.2s ease;
     pointer-events: none;
     z-index: 10;
   }
-  .footer-note strong:hover::after,
-  .footer-note strong:focus-visible::after {
+  .footer-mark strong:hover::after,
+  .footer-mark strong:focus-visible::after {
     opacity: 1;
     transform: translateY(0);
+  }
+  .footer-note {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.7;
   }
   .footer-meta {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 20px;
+    flex-shrink: 0;
   }
   .footer-status {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    color: var(--ink);
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    white-space: nowrap;
   }
   .status-dot {
     width: 7px;
@@ -512,14 +559,18 @@
     100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
   }
   .footer-top-link {
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
+    font-size: 12px;
     color: var(--ink);
     border: 1px solid var(--line);
-    padding: 5px 10px;
-    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    padding: 6px 12px;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
   }
   .footer-top-link:hover {
-    color: var(--accent);
+    color: var(--bg);
+    background: var(--accent);
     border-color: var(--accent);
     transform: translateY(-2px);
   }
@@ -728,7 +779,13 @@
 
 <footer>
   <div class="wrap footer-row">
-    <div class="footer-note"><strong data-tooltip="kairos (n.) — the right moment to act" tabindex="0">Kairos Syndicate.</strong> Started by a few people who'd rather build than wait for permission — still small, still early, still shipping.</div>
+    <div class="footer-brand">
+      <div class="footer-mark">
+        <span class="prompt" aria-hidden="true">$</span>
+        <strong data-tooltip="kairos (n.) — the right moment to act" tabindex="0">kairos_syndicate</strong>
+      </div>
+      <p class="footer-note">Started by a few people who'd rather build than wait for permission — still small, still early, still shipping.</p>
+    </div>
     <div class="footer-meta">
       <div class="footer-status"><span class="status-dot" aria-hidden="true"></span> building in the open</div>
       <a href="#top" class="footer-top-link" id="backToTop">back to top ↑</a>
@@ -816,7 +873,7 @@
     function getColor(isDark) {
       const varName = isDark ? '--accent' : '--accent-deep';
       const val = getComputedStyle(root).getPropertyValue(varName).trim();
-      return hexToRgb(val || (isDark ? '#4FB8E0' : '#0B2A42'));
+      return hexToRgb(val || (isDark ? '#E08A3E' : '#2B2118'));
     }
 
     function resize() {
@@ -986,16 +1043,16 @@
 
       if (cursorTrail.length) {
         const head = cursorTrail[cursorTrail.length - 1];
-        const grad = fgCtx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 22);
-        grad.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.55)`);
+        const grad = fgCtx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 16);
+        grad.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.30)`);
         grad.addColorStop(1, `rgba(${accent.r},${accent.g},${accent.b},0)`);
         fgCtx.fillStyle = grad;
         fgCtx.beginPath();
-        fgCtx.arc(head.x, head.y, 22, 0, Math.PI * 2);
+        fgCtx.arc(head.x, head.y, 16, 0, Math.PI * 2);
         fgCtx.fill();
-        fgCtx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},0.9)`;
+        fgCtx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},0.85)`;
         fgCtx.beginPath();
-        fgCtx.arc(head.x, head.y, 2.4, 0, Math.PI * 2);
+        fgCtx.arc(head.x, head.y, 2.2, 0, Math.PI * 2);
         fgCtx.fill();
       }
     }
