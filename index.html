@@ -631,6 +631,393 @@
       transition: none;
     }
   }
+  /*
+ * Neo-Minimalist Theme
+ * Monochrome interface with one indigo accent.
+ */
+
+:root {
+  --bg: #FFFFFF;
+  --bg-alt: #FAFAFA;
+  --ink: #0A0A0A;
+  --ink-soft: #666666;
+  --line: #EAEAEA;
+  --accent: #5E6AD2;
+  --accent-deep: #5E6AD2;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-alt: #111111;
+  --ink: #F5F5F5;
+  --ink-soft: #A1A1A1;
+  --line: #272727;
+  --accent: #5E6AD2;
+  --accent-deep: #5E6AD2;
+}
+
+/*
+ * Typography
+ */
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.pixel {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  line-height: 1.1;
+}
+
+.navbrand span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1.pixel {
+  margin-bottom: 28px;
+  font-size: clamp(44px, 8vw, 72px);
+  font-weight: 600;
+  letter-spacing: -0.07em;
+  line-height: 0.95;
+}
+
+/*
+ * Remove decorative glow and reduce background clutter
+ */
+.bg-glow {
+  display: none;
+}
+
+#bgCanvas {
+  opacity: 0.22;
+  filter: grayscale(1);
+}
+
+#fgCanvas {
+  opacity: 1;
+}
+
+/*
+ * Header and navigation
+ */
+header {
+  background: color-mix(
+    in srgb,
+    var(--bg) 92%,
+    transparent
+  );
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+nav {
+  padding: 20px 0;
+}
+
+.nav-links {
+  color: var(--ink-soft);
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.nav-links a::after {
+  height: 1px;
+  background: var(--accent);
+}
+
+.theme-toggle {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  border-radius: 4px;
+}
+
+.theme-toggle:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/*
+ * Hero section
+ */
+.hero {
+  padding: 112px 0 100px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tag-line {
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.tag-line::after {
+  width: 6px;
+  height: 11px;
+  background: var(--accent);
+}
+
+.hero p {
+  max-width: 58ch;
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/*
+ * Buttons
+ */
+.btn {
+  padding: 11px 16px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.btn.solid {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.btn.solid:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+}
+
+/*
+ * Sections
+ */
+section {
+  padding: 88px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-label span {
+  color: var(--accent);
+}
+
+.prose {
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+
+/*
+ * What-we-do list
+ */
+.term-list {
+  margin-top: 40px;
+}
+
+.term-item {
+  margin: 0;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.term-item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.term-item::before {
+  display: none;
+}
+
+.term-item:hover {
+  background: var(--bg-alt);
+  transform: none;
+}
+
+.term-item .idx {
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.term-item:hover .idx {
+  transform: none;
+}
+
+.term-item h3 {
+  margin-bottom: 8px;
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.term-item p {
+  max-width: 65ch;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/*
+ * Join form
+ */
+.join-box {
+  padding: 36px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.join-box .pixel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px !important;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field {
+  gap: 8px;
+}
+
+.field label {
+  color: var(--ink-soft);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.field input,
+.field textarea {
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: #BDBDBD;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(
+    in srgb,
+    var(--accent) 12%,
+    transparent
+  );
+}
+
+/*
+ * Footer
+ */
+footer {
+  margin-top: 0;
+  padding: 72px 0 56px;
+  background: var(--bg);
+}
+
+footer::before {
+  height: 1px;
+  background: var(--line);
+}
+
+.footer-mark strong {
+  border-bottom: 1px dotted var(--line);
+}
+
+.footer-note {
+  color: var(--ink-soft);
+}
+
+.footer-top-link {
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.footer-top-link:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/*
+ * Progress bar and selection
+ */
+.scroll-progress {
+  height: 2px;
+  background: var(--accent);
+}
+
+::selection {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+/*
+ * Mobile adjustments
+ */
+@media (max-width: 640px) {
+  .hero {
+    padding: 80px 0 72px;
+  }
+
+  section {
+    padding: 64px 0;
+  }
+
+  .join-box {
+    padding: 24px 20px;
+  }
+
+  .nav-links {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-toggle span {
+    background: var(--ink);
+  }
+}
 </style>
 </head>
 <body>
