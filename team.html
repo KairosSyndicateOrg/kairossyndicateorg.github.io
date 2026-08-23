@@ -13,23 +13,23 @@
 <link rel="shortcut icon" href="assets/favicon.ico">
 <style>
   :root {
-    --bg: #FFFDF9;
-    --bg-alt: #F7F1E8;
-    --ink: #2B2118;
-    --ink-soft: #6E5D4C;
-    --line: #E3D6C4;
-    --accent: #C4661F;
-    --accent-deep: #2B2118;
+    --bg: #FFFFFF;
+    --bg-alt: #F2F7FA;
+    --ink: #0B2A42;
+    --ink-soft: #2C4A5C;
+    --line: #C9D8DE;
+    --accent: #1E7FA6;
+    --accent-deep: #0B2A42;
   }
 
   :root[data-theme="dark"] {
-    --bg: #120E0A;
-    --bg-alt: #1C1611;
-    --ink: #F5EDE1;
-    --ink-soft: #C9B8A3;
-    --line: #3A2F26;
-    --accent: #E08A3E;
-    --accent-deep: #F5EDE1;
+    --bg: #0A0A0A;
+    --bg-alt: #151515;
+    --ink: #EDEDED;
+    --ink-soft: #B8B8B8;
+    --line: #2B2B2B;
+    --accent: #4FB8E0;
+    --accent-deep: #EDEDED;
   }
 
   * { box-sizing: border-box; }
@@ -719,7 +719,7 @@
     function getColor(isDark) {
       const varName = isDark ? '--accent' : '--accent-deep';
       const val = getComputedStyle(root).getPropertyValue(varName).trim();
-      return hexToRgb(val || (isDark ? '#E08A3E' : '#2B2118'));
+      return hexToRgb(val || (isDark ? '#4FB8E0' : '#0B2A42'));
     }
 
     function resize() {
