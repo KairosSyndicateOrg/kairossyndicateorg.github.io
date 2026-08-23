@@ -55,6 +55,16 @@
     pointer-events: none;
   }
 
+  #fgCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+
   .bg-glow {
     position: fixed;
     z-index: -2;
@@ -311,6 +321,8 @@
 
   .term-list { margin-top: 22px; }
   .term-item {
+    position: relative;
+    overflow: hidden;
     display: flex;
     gap: 14px;
     padding: 14px 10px;
@@ -318,8 +330,19 @@
     border-top: 1px solid var(--line);
     transition: background-color 0.25s ease, border-color 0.3s ease, transform 0.25s ease;
   }
+  .term-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .term-item:hover::before { opacity: 1; }
   .term-item:hover { background: var(--bg-alt); transform: translateX(4px); }
   .term-item:last-child { border-bottom: 1px solid var(--line); }
+  .term-item > div { position: relative; }
   .term-item .idx {
     font-family: 'VT323', monospace;
     font-size: 22px;
@@ -339,9 +362,10 @@
   .term-item p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.6; }
 
   footer {
-    padding: 28px 0 40px;
-    border-top: 2px dashed var(--line);
-    transition: border-color 0.35s ease;
+    padding: 40px 0 44px;
+    margin-top: 4px;
+    background: var(--bg-alt);
+    transition: background-color 0.35s ease;
   }
   .footer-row {
     display: flex;
@@ -349,14 +373,42 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 14px;
-    font-size: 12px;
-    color: var(--ink-soft);
+    font-size: 12.5px;
+    color: var(--ink);
   }
   .footer-note {
     max-width: 46ch;
-    line-height: 1.6;
+    line-height: 1.65;
   }
-  .footer-note strong { color: var(--ink); font-weight: 600; }
+  .footer-note strong {
+    color: var(--ink);
+    font-weight: 600;
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dotted var(--ink-soft);
+  }
+  .footer-note strong::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 9px);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 6px 10px;
+    font-size: 11px;
+    line-height: 1.4;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .footer-note strong:hover::after,
+  .footer-note strong:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
   .footer-meta {
     display: flex;
     align-items: center;
@@ -366,6 +418,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
+    color: var(--ink);
   }
   .status-dot {
     width: 7px;
@@ -382,7 +435,7 @@
   }
   .footer-top-link {
     text-decoration: none;
-    color: var(--ink-soft);
+    color: var(--ink);
     border: 1px solid var(--line);
     padding: 5px 10px;
     transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -454,6 +507,7 @@
 <body>
 
 <canvas id="bgCanvas" aria-hidden="true"></canvas>
+<canvas id="fgCanvas" aria-hidden="true"></canvas>
 <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
 <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
 
@@ -520,7 +574,7 @@
 
 <footer>
   <div class="wrap footer-row">
-    <div class="footer-note"><strong>Kairos Syndicate.</strong> Started by a few people who'd rather build than wait for permission — still small, still early, still shipping.</div>
+    <div class="footer-note"><strong data-tooltip="kairos (n.) — the right moment to act" tabindex="0">Kairos Syndicate.</strong> Started by a few people who'd rather build than wait for permission — still small, still early, still shipping.</div>
     <div class="footer-meta">
       <div class="footer-status"><span class="status-dot" aria-hidden="true"></span> building in the open</div>
       <a href="#top" class="footer-top-link" id="backToTop">back to top ↑</a>
@@ -556,6 +610,15 @@
         btn.style.transform = '';
       });
     });
+
+    // Spotlight — a soft accent glow that tracks the cursor inside each row
+    document.querySelectorAll('.term-item').forEach((item) => {
+      item.addEventListener('mousemove', (e) => {
+        const rect = item.getBoundingClientRect();
+        item.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        item.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      });
+    });
   }
 
   const toggle = document.getElementById('themeToggle');
@@ -583,6 +646,8 @@
   (function () {
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
+    const fgCanvas = document.getElementById('fgCanvas');
+    const fgCtx = fgCanvas.getContext('2d');
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let w, h, particles;
     const mouse = { x: -9999, y: -9999, active: false };
@@ -601,8 +666,8 @@
     }
 
     function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+      w = canvas.width = fgCanvas.width = window.innerWidth;
+      h = canvas.height = fgCanvas.height = window.innerHeight;
     }
 
     function initParticles() {
@@ -656,6 +721,7 @@
     function draw() {
       t += 1;
       ctx.clearRect(0, 0, w, h);
+      fgCtx.clearRect(0, 0, w, h);
       const isDark = root.getAttribute('data-theme') === 'dark';
       const accent = getColor(isDark);
       const lineAlphaMax = isDark ? 0.30 : 0.32;
@@ -758,25 +824,25 @@
       for (let i = 0; i < cursorTrail.length; i++) {
         const pt = cursorTrail[i];
         const frac = (i + 1) / cursorTrail.length;
-        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${frac * 0.5})`;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 1 + frac * 3.5, 0, Math.PI * 2);
-        ctx.fill();
+        fgCtx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${frac * 0.5})`;
+        fgCtx.beginPath();
+        fgCtx.arc(pt.x, pt.y, 1 + frac * 3.5, 0, Math.PI * 2);
+        fgCtx.fill();
       }
 
       if (cursorTrail.length) {
         const head = cursorTrail[cursorTrail.length - 1];
-        const grad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 22);
+        const grad = fgCtx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 22);
         grad.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.55)`);
         grad.addColorStop(1, `rgba(${accent.r},${accent.g},${accent.b},0)`);
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(head.x, head.y, 22, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},0.9)`;
-        ctx.beginPath();
-        ctx.arc(head.x, head.y, 2.4, 0, Math.PI * 2);
-        ctx.fill();
+        fgCtx.fillStyle = grad;
+        fgCtx.beginPath();
+        fgCtx.arc(head.x, head.y, 22, 0, Math.PI * 2);
+        fgCtx.fill();
+        fgCtx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},0.9)`;
+        fgCtx.beginPath();
+        fgCtx.arc(head.x, head.y, 2.4, 0, Math.PI * 2);
+        fgCtx.fill();
       }
     }
 
