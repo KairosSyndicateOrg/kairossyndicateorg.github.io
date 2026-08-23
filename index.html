@@ -113,6 +113,20 @@
     line-height: 1.6;
   }
 
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-deep));
+    z-index: 200;
+    transition: width 0.08s linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-progress { transition: none; }
+  }
+
   header {
     position: relative;
     z-index: 100;
@@ -402,15 +416,66 @@
     .join-form .field:nth-child(5) { grid-column: 1; }
   }
 
-  footer { padding: 24px 0 40px; }
+  footer {
+    padding: 28px 0 40px;
+    border-top: 2px dashed var(--line);
+    transition: border-color 0.35s ease;
+  }
   .footer-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 14px;
     font-size: 12px;
     color: var(--ink-soft);
+  }
+  .footer-note {
+    max-width: 46ch;
+    line-height: 1.6;
+  }
+  .footer-note strong { color: var(--ink); font-weight: 600; }
+  .footer-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .footer-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
+    animation: status-pulse 2.2s ease-out infinite;
+  }
+  @keyframes status-pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+    70%  { box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent); }
+    100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
+  }
+  .footer-top-link {
+    text-decoration: none;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    padding: 5px 10px;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .footer-top-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot { animation: none; }
+  }
+  @media (max-width: 640px) {
+    .footer-row { flex-direction: column; align-items: flex-start; }
+    .footer-meta { width: 100%; justify-content: space-between; }
   }
 
   @media (max-width: 640px) {
@@ -470,6 +535,8 @@
 <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
 <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
 
+<div id="top"></div>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <header>
   <div class="wrap">
     <nav>
@@ -607,12 +674,44 @@
 
 <footer>
   <div class="wrap footer-row">
-    <div>Kairos Syndicate — AI/CS Club</div>
+    <div class="footer-note"><strong>Kairos Syndicate.</strong> Started by a few people who'd rather build than wait for permission — still small, still early, still shipping.</div>
+    <div class="footer-meta">
+      <div class="footer-status"><span class="status-dot" aria-hidden="true"></span> building in the open</div>
+      <a href="#top" class="footer-top-link" id="backToTop">back to top ↑</a>
+    </div>
   </div>
 </footer>
 
 <script>
   const root = document.documentElement;
+
+  // Scroll progress bar
+  const scrollProgress = document.getElementById('scrollProgress');
+  function updateScrollProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgress.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  updateScrollProgress();
+
+  // Magnetic buttons — nudge toward the cursor, snap back on leave
+  const magnetPrefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!magnetPrefersReduced) {
+    document.querySelectorAll('.btn').forEach((btn) => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const relX = e.clientX - rect.left - rect.width / 2;
+        const relY = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${relX * 0.18}px, ${relY * 0.35}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  }
+
   const toggle = document.getElementById('themeToggle');
   toggle.addEventListener('click', () => {
     const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -695,6 +794,17 @@
     });
     window.addEventListener('mouseleave', () => { mouse.active = false; });
 
+    // Cursor probe — a smoothed "node" that follows the pointer, trailing
+    // a short comet tail and lighting up faint links to nearby particles,
+    // like a probe reading the circuit as it moves
+    let cx = w / 2, cy = h / 2;
+    const cursorTrail = [];
+
+    // Signal pulses — small bright dots that travel along an active
+    // connection, like data moving through a circuit trace
+    const pulses = [];
+    let pulseTimer = 0;
+
     let t = 0;
 
     function draw() {
@@ -726,6 +836,7 @@
         if (p.y > h + 10) p.y = -10;
       }
 
+      const activeEdges = [];
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i], b = particles[j];
@@ -738,6 +849,7 @@
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
             ctx.stroke();
+            activeEdges.push([a, b]);
           }
         }
       }
@@ -747,6 +859,77 @@
         ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${twinkle})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Spawn a new signal pulse every ~55 frames along a live connection,
+      // like a packet of data hopping between circuit nodes
+      pulseTimer++;
+      if (pulseTimer > 55 && activeEdges.length && pulses.length < 6) {
+        pulseTimer = 0;
+        const [a, b] = activeEdges[Math.floor(Math.random() * activeEdges.length)];
+        pulses.push({ a, b, tt: 0 });
+      }
+      for (let i = pulses.length - 1; i >= 0; i--) {
+        const pu = pulses[i];
+        pu.tt += 0.018;
+        if (pu.tt >= 1) { pulses.splice(i, 1); continue; }
+        const px = pu.a.x + (pu.b.x - pu.a.x) * pu.tt;
+        const py = pu.a.y + (pu.b.y - pu.a.y) * pu.tt;
+        const fade = Math.sin(pu.tt * Math.PI);
+        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${0.9 * fade})`;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Cursor probe — ease toward the pointer, log a short trail, and
+      // light up faint links to nearby particles
+      if (mouse.active) {
+        cx += (mouse.x - cx) * 0.16;
+        cy += (mouse.y - cy) * 0.16;
+        cursorTrail.push({ x: cx, y: cy });
+        if (cursorTrail.length > 18) cursorTrail.shift();
+
+        const probeRadius = 170;
+        for (const p of particles) {
+          const dx = p.x - cx, dy = p.y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < probeRadius) {
+            const alpha = (1 - dist / probeRadius) * 0.35;
+            ctx.strokeStyle = `rgba(${accent.r},${accent.g},${accent.b},${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(p.x, p.y);
+            ctx.stroke();
+          }
+        }
+      } else if (cursorTrail.length) {
+        cursorTrail.shift();
+      }
+
+      for (let i = 0; i < cursorTrail.length; i++) {
+        const pt = cursorTrail[i];
+        const frac = (i + 1) / cursorTrail.length;
+        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${frac * 0.5})`;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 1 + frac * 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (cursorTrail.length) {
+        const head = cursorTrail[cursorTrail.length - 1];
+        const grad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 22);
+        grad.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.55)`);
+        grad.addColorStop(1, `rgba(${accent.r},${accent.g},${accent.b},0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},0.9)`;
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, 2.4, 0, Math.PI * 2);
         ctx.fill();
       }
     }
