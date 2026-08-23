@@ -1,1521 +1,2218 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kairos — AI/CS Club</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
-<link rel="shortcut icon" href="assets/favicon.ico">
-<style>
-  :root {
-    --bg: #FFFFFF;
-    --bg-alt: #F2F7FA;
-    --ink: #0B2A42;
-    --ink-soft: #2C4A5C;
-    --line: #C9D8DE;
-    --accent: #1E7FA6;
-    --accent-deep: #0B2A42;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  :root[data-theme="dark"] {
-    --bg: #0A0A0A;
-    --bg-alt: #151515;
-    --ink: #EDEDED;
-    --ink-soft: #B8B8B8;
-    --line: #2B2B2B;
-    --accent: #4FB8E0;
-    --accent-deep: #EDEDED;
-  }
+  <title>Kairos — AI/CS Club</title>
 
-  * { box-sizing: border-box; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  html {
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
-  }
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background-color: color-mix(in srgb, var(--accent) 55%, transparent);
-    border-radius: 999px;
-    border: 2.5px solid var(--bg);
-    background-clip: padding-box;
-    transition: background-color 0.2s ease;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--accent);
-  }
-  ::-webkit-scrollbar-corner { background: transparent; }
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+  <link rel="shortcut icon" href="assets/favicon.ico">
 
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
-    transition: background 0.35s ease, color 0.35s ease;
-  }
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --bg-alt: #FAFAFA;
+      --ink: #0A0A0A;
+      --ink-soft: #666666;
+      --line: #EAEAEA;
+      --accent: #5E6AD2;
+      --accent-deep: #5E6AD2;
+    }
 
-  #bgCanvas {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-  }
+    :root[data-theme="dark"] {
+      --bg: #0A0A0A;
+      --bg-alt: #111111;
+      --ink: #F5F5F5;
+      --ink-soft: #A1A1A1;
+      --line: #272727;
+      --accent: #5E6AD2;
+      --accent-deep: #5E6AD2;
+    }
 
-  #fgCanvas {
-    position: fixed;
-    inset: 0;
-    z-index: 150;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  .bg-glow {
-    position: fixed;
-    z-index: -2;
-    border-radius: 50%;
-    filter: blur(42px);
-    pointer-events: none;
-    transition: opacity 0.35s ease;
-    will-change: transform;
-  }
-  .bg-glow-1 {
-    width: 460px;
-    height: 460px;
-    top: -130px;
-    left: -100px;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-    opacity: 0.36;
-    animation: glow-float-1 15s ease-in-out infinite;
-  }
-  .bg-glow-2 {
-    width: 400px;
-    height: 400px;
-    bottom: -140px;
-    right: -80px;
-    background: radial-gradient(circle, var(--accent-deep) 0%, transparent 70%);
-    opacity: 0.28;
-    animation: glow-float-2 18s ease-in-out infinite;
-  }
-  :root[data-theme="dark"] .bg-glow-1 { opacity: 0.30; }
-  :root[data-theme="dark"] .bg-glow-2 { opacity: 0.22; }
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
+    }
 
-  @keyframes glow-float-1 {
-    0%   { transform: translate(0, 0) scale(1); }
-    33%  { transform: translate(140px, 100px) scale(1.22); }
-    66%  { transform: translate(60px, 190px) scale(0.92); }
-    100% { transform: translate(0, 0) scale(1); }
-  }
-  @keyframes glow-float-2 {
-    0%   { transform: translate(0, 0) scale(1); }
-    33%  { transform: translate(-120px, -90px) scale(1.16); }
-    66%  { transform: translate(-190px, -30px) scale(0.94); }
-    100% { transform: translate(0, 0) scale(1); }
-  }
+    ::-webkit-scrollbar {
+      width: 9px;
+      height: 9px;
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    .bg-glow { animation: none; }
-  }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+    ::-webkit-scrollbar-thumb {
+      background: color-mix(
+        in srgb,
+        var(--accent) 55%,
+        transparent
+      );
+      border: 2px solid var(--bg);
+      border-radius: 999px;
+      background-clip: padding-box;
+    }
 
-  a { color: inherit; }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
 
-  ::selection { background: var(--accent); color: var(--bg); }
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
 
-  .pixel {
-    font-family: 'Press Start 2P', monospace;
-    line-height: 1.6;
-  }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      transition:
+        background 0.35s ease,
+        color 0.35s ease;
+    }
 
-  .scroll-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-deep));
-    z-index: 200;
-    transition: width 0.08s linear;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-progress { transition: none; }
-  }
+    a {
+      color: inherit;
+    }
 
-  header {
-    position: relative;
-    z-index: 100;
-    border-bottom: 2px solid var(--ink);
-    background: var(--bg);
-    transition: background-color 0.35s ease, border-color 0.35s ease;
-  }
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 0;
-  }
-  .navbrand { display: flex; align-items: center; gap: 10px; }
-  .navbrand span { font-family: 'Press Start 2P', monospace; font-size: 12px; }
+    ::selection {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
 
-  .nav-links { display: flex; list-style: none; margin: 0; padding: 0; font-size: 13px; }
-  .nav-links li + li { margin-left: 22px; }
-  .nav-links a {
-    position: relative;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    padding-bottom: 2px;
-  }
-  .nav-links a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 2px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.25s ease;
-  }
-  .nav-links a:hover { color: var(--accent); text-decoration: none; }
-  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .wrap {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-  .theme-toggle {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    background: var(--bg);
-    border: 2px solid var(--ink);
-    color: var(--ink);
-    padding: 6px 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-  }
-  .theme-toggle:hover { background: var(--ink); color: var(--bg); transform: translateY(-1px); }
-  .theme-toggle:active { transform: translateY(0) scale(0.97); }
-  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .pixel {
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        sans-serif;
+      line-height: 1.1;
+    }
 
-  .nav-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 24px;
-    height: 18px;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    margin-left: 14px;
-  }
-  .nav-toggle span {
-    display: block;
-    height: 2px;
-    width: 100%;
-    background: var(--ink);
-    transition: transform 0.25s ease, opacity 0.2s ease;
-  }
-  .nav-toggle.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-  .nav-toggle.open span:nth-child(2) { opacity: 0; }
-  .nav-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-  .nav-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    #bgCanvas,
+    #fgCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
 
-  .hero { padding: 56px 0 48px; border-bottom: 2px dashed var(--line); transition: border-color 0.35s ease; }
-  .hero-inner { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
-  .hero-text { flex: 1; min-width: 260px; max-width: 620px; }
+    #bgCanvas {
+      z-index: -1;
+      opacity: 0.18;
+      filter: grayscale(1);
+    }
 
-  .tag-line {
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
-  .tag-line::before { content: "> "; }
-  .tag-line::after {
-    content: "";
-    display: inline-block;
-    width: 7px;
-    height: 12px;
-    margin-left: 4px;
-    background: var(--accent);
-    vertical-align: -2px;
-    animation: blink-cursor 1s steps(1) infinite;
-  }
+    #fgCanvas {
+      z-index: 150;
+    }
 
-  @keyframes blink-cursor {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-  }
+    .bg-glow {
+      display: none;
+    }
 
-  h1.pixel {
-    font-size: 22px;
-    margin: 0 0 18px;
-    color: var(--ink);
-  }
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 200;
+      width: 0%;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.08s linear;
+    }
 
-  .hero p {
-    color: var(--ink-soft);
-    line-height: 1.7;
-    max-width: 52ch;
-    margin: 0 0 20px;
-  }
+    header {
+      position: relative;
+      z-index: 100;
+      background: color-mix(
+        in srgb,
+        var(--bg) 92%,
+        transparent
+      );
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease;
+    }
 
-  .hero-anim {
-    opacity: 0;
-    transform: translateY(16px);
-    animation: hero-in 0.7s cubic-bezier(.2,.65,.3,1) forwards;
-  }
-  .hero-anim.d1 { animation-delay: 0.05s; }
-  .hero-anim.d2 { animation-delay: 0.15s; }
-  .hero-anim.d3 { animation-delay: 0.25s; }
-  .hero-anim.d4 { animation-delay: 0.35s; }
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
 
-  @keyframes hero-in {
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .navbrand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-anim { opacity: 1; transform: none; animation: none; }
-    .tag-line::after { animation: none; opacity: 1; }
-  }
+    .navbrand a {
+      text-decoration: none;
+    }
 
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .btn {
-    position: relative;
-    overflow: hidden;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    font-size: 13px;
-    padding: 10px 16px;
-    text-decoration: none;
-    border: 2px solid var(--ink);
-    color: var(--ink);
-    background: var(--bg);
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-  }
-  .btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.55s ease;
-    pointer-events: none;
-  }
-  .btn:hover::before { left: 130%; }
-  .btn:hover { background: var(--ink); color: var(--bg); transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .btn.solid { background: var(--ink); color: var(--bg); }
-  .btn.solid:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-
-  section { padding: 48px 0; border-bottom: 2px dashed var(--line); transition: border-color 0.35s ease; }
-  section:last-of-type { border-bottom: none; }
-
-  .section-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 12px;
-    margin-bottom: 20px;
-    color: var(--ink);
-  }
-  .section-label span { color: var(--accent); }
-
-  .prose { color: var(--ink-soft); line-height: 1.75; max-width: 62ch; }
-  .prose + .prose { margin-top: 14px; }
-
-  .term-list { margin-top: 22px; }
-  .term-item {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    gap: 14px;
-    padding: 14px 10px;
-    margin: 0 -10px;
-    border-top: 1px solid var(--line);
-    transition: background-color 0.25s ease, border-color 0.3s ease, transform 0.25s ease;
-  }
-  .term-item::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  .term-item:hover::before { opacity: 1; }
-  .term-item:hover { background: var(--bg-alt); transform: translateX(4px); }
-  .term-item:last-child { border-bottom: 1px solid var(--line); }
-  .term-item > div { position: relative; }
-  .term-item .idx {
-    font-family: 'VT323', monospace;
-    font-size: 22px;
-    color: var(--accent);
-    width: 36px;
-    flex-shrink: 0;
-    transition: transform 0.25s ease;
-  }
-  .term-item:hover .idx { transform: scale(1.15); }
-  .term-item h3 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14.5px;
-    font-weight: 600;
-    margin: 0 0 6px;
-    color: var(--ink);
-  }
-  .term-item p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
-
-  .join-box {
-    border: 2px solid var(--ink);
-    padding: 26px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: var(--bg-alt);
-    transition: background-color 0.35s ease, border-color 0.35s ease;
-  }
-  .join-box p { margin: 6px 0 0; color: var(--ink-soft); font-size: 13.5px; }
-  .join-intro { max-width: 60ch; }
-
-  .join-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .join-form .field:nth-child(3),
-  .join-form .field:nth-child(4),
-  .join-form .field:nth-child(5) {
-    grid-column: 1 / -1;
-  }
-  .join-form button {
-    grid-column: 1 / -1;
-    justify-self: start;
-    cursor: pointer;
-  }
-
-  .field { display: flex; flex-direction: column; gap: 6px; }
-  .field label {
-    font-size: 12px;
-    color: var(--ink-soft);
-    letter-spacing: 0.02em;
-  }
-  .field .optional { color: var(--ink-soft); opacity: 0.7; }
-
-  .field input,
-  .field textarea {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13.5px;
-    background: var(--bg);
-    color: var(--ink);
-    border: 2px solid var(--line);
-    padding: 9px 10px;
-    resize: vertical;
-    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .field input:focus,
-  .field textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
-  }
-
-  .join-status {
-    grid-column: 1 / -1;
-    font-size: 13px;
-    min-height: 1.4em;
-    transition: color 0.2s ease;
-  }
-  .join-status.ok { color: var(--accent); }
-  .join-status.err { color: #B4432C; }
-  .join-status:not(:empty) {
-    animation: status-in 0.3s ease;
-  }
-  @keyframes status-in {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 640px) {
-    .join-form { grid-template-columns: 1fr; }
-    .join-form .field:nth-child(3),
-    .join-form .field:nth-child(4),
-    .join-form .field:nth-child(5) { grid-column: 1; }
-  }
-
-  footer {
-    position: relative;
-    margin-top: 8px;
-    padding: 46px 0 40px;
-    background:
-      radial-gradient(640px 220px at 12% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%),
-      var(--bg-alt);
-    transition: background-color 0.35s ease;
-    overflow: hidden;
-  }
-  footer::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 45%, transparent), transparent 55%);
-  }
-  .footer-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 22px 28px;
-  }
-  .footer-brand { max-width: 48ch; }
-  .footer-mark {
-    display: flex;
-    align-items: baseline;
-    gap: 7px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    margin: 0 0 10px;
-  }
-  .footer-mark .prompt { color: var(--accent); }
-  .footer-mark strong {
-    color: var(--ink);
-    font-weight: 600;
-    font-size: 13px;
-    position: relative;
-    cursor: help;
-    border-bottom: 1px dotted var(--ink-soft);
-  }
-  .footer-mark strong::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    left: 0;
-    bottom: calc(100% + 10px);
-    background: var(--ink);
-    color: var(--bg);
-    padding: 6px 10px;
-    font-size: 11px;
-    line-height: 1.4;
-    white-space: nowrap;
-    border-radius: 2px;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events: none;
-    z-index: 10;
-  }
-  .footer-mark strong:hover::after,
-  .footer-mark strong:focus-visible::after {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .footer-note {
-    margin: 0;
-    color: var(--ink-soft);
-    font-size: 13px;
-    line-height: 1.7;
-  }
-  .footer-meta {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-shrink: 0;
-  }
-  .footer-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--ink-soft);
-    white-space: nowrap;
-  }
-  .status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
-    animation: status-pulse 2.2s ease-out infinite;
-  }
-  @keyframes status-pulse {
-    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
-    70%  { box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent); }
-    100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
-  }
-  .footer-top-link {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    font-size: 12px;
-    color: var(--ink);
-    border: 1px solid var(--line);
-    padding: 6px 12px;
-    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-  }
-  .footer-top-link:hover {
-    color: var(--bg);
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .status-dot { animation: none; }
-  }
-  @media (max-width: 640px) {
-    .footer-row { flex-direction: column; align-items: flex-start; }
-    .footer-meta { width: 100%; justify-content: space-between; }
-  }
-
-  @media (max-width: 640px) {
-    .hero-inner { flex-direction: column; align-items: flex-start; }
-
-    .nav-toggle { display: flex; }
+    .navbrand span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
 
     .nav-links {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      color: var(--ink-soft);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+
+    .nav-links li + li {
+      margin-left: 24px;
+    }
+
+    .nav-links a {
+      position: relative;
+      padding-bottom: 4px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
       position: absolute;
-      top: 100%;
       left: 0;
-      right: 0;
-      flex-direction: column;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .theme-toggle {
+      padding: 7px 10px;
       background: var(--bg);
-      border-bottom: 2px solid var(--ink);
-      padding: 0 20px;
-      max-height: 0;
-      overflow: hidden;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      margin-left: 14px;
+      padding: 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--ink);
+      transition:
+        transform 0.25s ease,
+        opacity 0.2s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
       opacity: 0;
-      transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
     }
-    .nav-links.open {
-      max-height: 260px;
-      opacity: 1;
-      padding: 14px 20px 18px;
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
     }
-    .nav-links li + li { margin-left: 0; margin-top: 14px; }
-  }
 
-  .reveal {
-    opacity: 0;
-    transform: translateY(22px);
-    transition: opacity 0.7s cubic-bezier(.2,.65,.3,1), transform 0.7s cubic-bezier(.2,.65,.3,1);
-  }
-  .reveal.in-view {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-delay-1 { transition-delay: 0.08s; }
-  .reveal-delay-2 { transition-delay: 0.16s; }
-  .reveal-delay-3 { transition-delay: 0.24s; }
-  .reveal-delay-4 { transition-delay: 0.32s; }
+    .theme-toggle:focus-visible,
+    .nav-toggle:focus-visible,
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .reveal {
-      opacity: 1;
+    .hero {
+      padding: 112px 0 100px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .hero-text {
+      flex: 1;
+      min-width: 260px;
+      max-width: 680px;
+    }
+
+    .tag-line {
+      margin-bottom: 22px;
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-line::before {
+      content: "> ";
+    }
+
+    .tag-line::after {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 11px;
+      margin-left: 4px;
+      background: var(--accent);
+      vertical-align: -2px;
+      animation: blink-cursor 1s steps(1) infinite;
+    }
+
+    @keyframes blink-cursor {
+      0%, 49% {
+        opacity: 1;
+      }
+
+      50%, 100% {
+        opacity: 0;
+      }
+    }
+
+    h1.pixel {
+      margin: 0 0 28px;
+      color: var(--ink);
+      font-size: clamp(44px, 8vw, 72px);
+      font-weight: 600;
+      letter-spacing: -0.07em;
+      line-height: 0.95;
+    }
+
+    .hero p {
+      max-width: 58ch;
+      margin: 0 0 28px;
+      color: var(--ink-soft);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .hero-anim {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: hero-in 0.7s cubic-bezier(.2, .65, .3, 1) forwards;
+    }
+
+    .hero-anim.d1 {
+      animation-delay: 0.05s;
+    }
+
+    .hero-anim.d2 {
+      animation-delay: 0.15s;
+    }
+
+    .hero-anim.d3 {
+      animation-delay: 0.25s;
+    }
+
+    .hero-anim.d4 {
+      animation-delay: 0.35s;
+    }
+
+    @keyframes hero-in {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      position: relative;
+      overflow: hidden;
+      padding: 11px 16px;
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.28),
+        transparent
+      );
+      transform: skewX(-20deg);
+      transition: left 0.55s ease;
+      pointer-events: none;
+    }
+
+    .btn:hover::before {
+      left: 130%;
+    }
+
+    .btn:hover {
+      background: var(--ink);
+      color: var(--bg);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.solid {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .btn.solid:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    section {
+      padding: 88px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-label {
+      margin-bottom: 30px;
+      color: var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-label span {
+      color: var(--accent);
+    }
+
+    .prose {
+      max-width: 62ch;
+      color: var(--ink-soft);
+      line-height: 1.85;
+    }
+
+    .prose p {
+      margin: 0;
+    }
+
+    .prose p + p {
+      margin-top: 18px;
+    }
+
+    .term-list {
+      margin-top: 40px;
+    }
+
+    .term-item {
+      position: relative;
+      display: flex;
+      gap: 18px;
+      margin: 0;
+      padding: 22px 0;
+      border-top: 1px solid var(--line);
+      transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .term-item:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .term-item::before {
+      display: none;
+    }
+
+    .term-item:hover {
+      background: var(--bg-alt);
       transform: none;
-      transition: none;
     }
-  }
-  /*
- * Neo-Minimalist Theme
- * Monochrome interface with one indigo accent.
- */
 
-:root {
-  --bg: #FFFFFF;
-  --bg-alt: #FAFAFA;
-  --ink: #0A0A0A;
-  --ink-soft: #666666;
-  --line: #EAEAEA;
-  --accent: #5E6AD2;
-  --accent-deep: #5E6AD2;
-}
+    .term-item .idx {
+      flex-shrink: 0;
+      width: 36px;
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+    }
 
-:root[data-theme="dark"] {
-  --bg: #0A0A0A;
-  --bg-alt: #111111;
-  --ink: #F5F5F5;
-  --ink-soft: #A1A1A1;
-  --line: #272727;
-  --accent: #5E6AD2;
-  --accent-deep: #5E6AD2;
-}
+    .term-item:hover .idx {
+      transform: none;
+    }
 
-/*
- * Typography
- */
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  letter-spacing: -0.01em;
-}
+    .term-item h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
 
-.pixel {
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-  line-height: 1.1;
-}
+    .term-item p {
+      max-width: 65ch;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
 
-.navbrand span {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
+    .join-box {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: 36px;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
 
-.section-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+    .join-intro {
+      max-width: 60ch;
+    }
 
-h1.pixel {
-  margin-bottom: 28px;
-  font-size: clamp(44px, 8vw, 72px);
-  font-weight: 600;
-  letter-spacing: -0.07em;
-  line-height: 0.95;
-}
+    .join-box .pixel {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px !important;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
-/*
- * Remove decorative glow and reduce background clutter
- */
-.bg-glow {
-  display: none;
-}
+    .join-box p {
+      margin: 8px 0 0;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
 
-#bgCanvas {
-  opacity: 0.22;
-  filter: grayscale(1);
-}
+    .join-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
 
-#fgCanvas {
-  opacity: 1;
-}
+    .join-form .field:nth-child(n + 3) {
+      grid-column: 1 / -1;
+    }
 
-/*
- * Header and navigation
- */
-header {
-  background: color-mix(
-    in srgb,
-    var(--bg) 92%,
-    transparent
-  );
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-}
+    .join-form button {
+      grid-column: 1 / -1;
+      justify-self: start;
+      cursor: pointer;
+    }
 
-nav {
-  padding: 20px 0;
-}
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-.nav-links {
-  color: var(--ink-soft);
-}
+    .field label {
+      color: var(--ink-soft);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+    }
 
-.nav-links a:hover {
-  color: var(--ink);
-}
+    .field input,
+    .field textarea {
+      padding: 12px;
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      resize: vertical;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+    }
 
-.nav-links a::after {
-  height: 1px;
-  background: var(--accent);
-}
+    .field input:hover,
+    .field textarea:hover {
+      border-color: #BDBDBD;
+    }
 
-.theme-toggle {
-  background: var(--bg);
-  border: 1px solid var(--line);
-  color: var(--ink-soft);
-  border-radius: 4px;
-}
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(
+        in srgb,
+        var(--accent) 12%,
+        transparent
+      );
+    }
 
-.theme-toggle:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--bg);
-}
+    .join-status {
+      grid-column: 1 / -1;
+      min-height: 1.4em;
+      font-size: 13px;
+    }
 
-/*
- * Hero section
- */
-.hero {
-  padding: 112px 0 100px;
-  border-bottom: 1px solid var(--line);
-}
+    .join-status.ok {
+      color: var(--accent);
+    }
 
-.tag-line {
-  color: var(--accent);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-}
+    .join-status.err {
+      color: #B74355;
+    }
 
-.tag-line::after {
-  width: 6px;
-  height: 11px;
-  background: var(--accent);
-}
+    .join-status:not(:empty) {
+      animation: status-in 0.3s ease;
+    }
 
-.hero p {
-  max-width: 58ch;
-  color: var(--ink-soft);
-  font-size: 16px;
-  line-height: 1.8;
-}
+    @keyframes status-in {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
 
-/*
- * Buttons
- */
-.btn {
-  padding: 11px 16px;
-  border: 1px solid var(--ink);
-  border-radius: 4px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: -0.01em;
-}
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-.btn:hover {
-  background: var(--ink);
-  color: var(--bg);
-}
+    footer {
+      position: relative;
+      margin-top: 0;
+      padding: 72px 0 56px;
+      background: var(--bg);
+      overflow: hidden;
+    }
 
-.btn.solid {
-  background: var(--ink);
-  color: var(--bg);
-}
+    footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 1px;
+      background: var(--line);
+    }
 
-.btn.solid:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #FFFFFF;
-}
+    .footer-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 22px 28px;
+      flex-wrap: wrap;
+    }
 
-/*
- * Sections
- */
-section {
-  padding: 88px 0;
-  border-bottom: 1px solid var(--line);
-}
+    .footer-brand {
+      max-width: 48ch;
+    }
 
-.section-label span {
-  color: var(--accent);
-}
+    .footer-mark {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      margin: 0 0 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+    }
 
-.prose {
-  color: var(--ink-soft);
-  line-height: 1.85;
-}
+    .footer-mark .prompt {
+      color: var(--accent);
+    }
 
-/*
- * What-we-do list
- */
-.term-list {
-  margin-top: 40px;
-}
+    .footer-mark strong {
+      position: relative;
+      color: var(--ink);
+      border-bottom: 1px dotted var(--line);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: help;
+    }
 
-.term-item {
-  margin: 0;
-  padding: 22px 0;
-  border-top: 1px solid var(--line);
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
+    .footer-mark strong::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 0;
+      padding: 6px 10px;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 2px;
+      font-size: 11px;
+      line-height: 1.4;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    }
 
-.term-item:last-child {
-  border-bottom: 1px solid var(--line);
-}
+    .footer-mark strong:hover::after,
+    .footer-mark strong:focus-visible::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-.term-item::before {
-  display: none;
-}
+    .footer-note {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.7;
+    }
 
-.term-item:hover {
-  background: var(--bg-alt);
-  transform: none;
-}
+    .footer-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+    }
 
-.term-item .idx {
-  color: var(--accent);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  font-weight: 500;
-}
+    .footer-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      white-space: nowrap;
+    }
 
-.term-item:hover .idx {
-  transform: none;
-}
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: status-pulse 2.2s ease-out infinite;
+    }
 
-.term-item h3 {
-  margin-bottom: 8px;
-  font-family: Inter, sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
+    @keyframes status-pulse {
+      0% {
+        box-shadow: 0 0 0 0 color-mix(
+          in srgb,
+          var(--accent) 55%,
+          transparent
+        );
+      }
 
-.term-item p {
-  max-width: 65ch;
-  color: var(--ink-soft);
-  font-size: 14px;
-  line-height: 1.7;
-}
+      70% {
+        box-shadow: 0 0 0 7px color-mix(
+          in srgb,
+          var(--accent) 0%,
+          transparent
+        );
+      }
 
-/*
- * Join form
- */
-.join-box {
-  padding: 36px;
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
+      100% {
+        box-shadow: 0 0 0 0 color-mix(
+          in srgb,
+          var(--accent) 0%,
+          transparent
+        );
+      }
+    }
 
-.join-box .pixel {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px !important;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
+    .footer-top-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      text-decoration: none;
+      transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
 
-.field {
-  gap: 8px;
-}
+    .footer-top-link:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
+      transform: translateY(-2px);
+    }
 
-.field label {
-  color: var(--ink-soft);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-}
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition:
+        opacity 0.7s cubic-bezier(.2, .65, .3, 1),
+        transform 0.7s cubic-bezier(.2, .65, .3, 1);
+    }
 
-.field input,
-.field textarea {
-  padding: 12px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-}
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-.field input:hover,
-.field textarea:hover {
-  border-color: #BDBDBD;
-}
+    .reveal-delay-1 {
+      transition-delay: 0.08s;
+    }
 
-.field input:focus,
-.field textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(
-    in srgb,
-    var(--accent) 12%,
-    transparent
-  );
-}
+    .reveal-delay-2 {
+      transition-delay: 0.16s;
+    }
 
-/*
- * Footer
- */
-footer {
-  margin-top: 0;
-  padding: 72px 0 56px;
-  background: var(--bg);
-}
+    .reveal-delay-3 {
+      transition-delay: 0.24s;
+    }
 
-footer::before {
-  height: 1px;
-  background: var(--line);
-}
+    .reveal-delay-4 {
+      transition-delay: 0.32s;
+    }
 
-.footer-mark strong {
-  border-bottom: 1px dotted var(--line);
-}
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
 
-.footer-note {
-  color: var(--ink-soft);
-}
+      .hero-anim,
+      .reveal {
+        opacity: 1;
+        transform: none;
+        animation: none;
+        transition: none;
+      }
 
-.footer-top-link {
-  padding: 7px 11px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-}
+      .tag-line::after,
+      .status-dot {
+        animation: none;
+      }
 
-.footer-top-link:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--bg);
-}
+      .scroll-progress {
+        transition: none;
+      }
+    }
 
-/*
- * Progress bar and selection
- */
-.scroll-progress {
-  height: 2px;
-  background: var(--accent);
-}
+    @media (max-width: 640px) {
+      .wrap {
+        padding: 0 20px;
+      }
 
-::selection {
-  background: var(--accent);
-  color: #FFFFFF;
-}
+      .hero {
+        padding: 80px 0 72px;
+      }
 
-/*
- * Mobile adjustments
- */
-@media (max-width: 640px) {
-  .hero {
-    padding: 80px 0 72px;
-  }
+      section {
+        padding: 64px 0;
+      }
 
-  section {
-    padding: 64px 0;
-  }
+      .nav-toggle {
+        display: flex;
+      }
 
-  .join-box {
-    padding: 24px 20px;
-  }
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        max-height: 0;
+        padding: 0 20px;
+        overflow: hidden;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+        opacity: 0;
+        transition:
+          max-height 0.3s ease,
+          opacity 0.25s ease,
+          padding 0.3s ease;
+      }
 
-  .nav-links {
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
-  }
+      .nav-links.open {
+        max-height: 260px;
+        padding: 14px 20px 18px;
+        opacity: 1;
+      }
 
-  .nav-toggle span {
-    background: var(--ink);
-  }
-}
-</style>
+      .nav-links li + li {
+        margin-top: 14px;
+        margin-left: 0;
+      }
+
+      .join-box {
+        padding: 24px 20px;
+      }
+
+      .join-form {
+        grid-template-columns: 1fr;
+      }
+
+      .join-form .field:nth-child(n + 3) {
+        grid-column: 1;
+      }
+
+      .footer-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-meta {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <canvas id="fgCanvas" aria-hidden="true"></canvas>
 
-<canvas id="bgCanvas" aria-hidden="true"></canvas>
-<canvas id="fgCanvas" aria-hidden="true"></canvas>
-<div class="bg-glow bg-glow-1" aria-hidden="true"></div>
-<div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+  <div id="top"></div>
+  <div
+    class="scroll-progress"
+    id="scrollProgress"
+    aria-hidden="true"
+  ></div>
 
-<div id="top"></div>
-<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-<header>
-  <div class="wrap">
-    <nav>
-      <div class="navbrand">
-        <a href="index.html" style="text-decoration:none; color:inherit;"><span>KAIROS SYNDICATE</span></a>
-      </div>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#about">about</a></li>
-        <li><a href="team.html">team</a></li>
-        <li><a href="#do">what we do</a></li>
-        <li><a href="#join">join</a></li>
-      </ul>
-      <div style="display:flex; align-items:center;">
-        <button class="theme-toggle" id="themeToggle">dark mode</button>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="hero">
-    <div class="wrap hero-inner">
-      <div class="hero-text">
-        <div class="tag-line hero-anim d1">ai_cs_club</div>
-        <h1 class="pixel hero-anim d2">Kairos</h1>
-        <p class="hero-anim d3">Kairos is an AI/CS club for people who'd rather build than just talk about it — algorithms, systems, real projects, whatever pulls you in. We're early, and we're building this to become something worth being part of.</p>
-        <div class="btn-row hero-anim d4">
-          <a href="#join" class="btn solid">Join</a>
-          <a href="#about" class="btn">Read more</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="about">
+  <header>
     <div class="wrap">
-      <div class="section-label reveal"><span>#</span> about</div>
-      <div class="prose reveal">
-        <p>The name comes from a Greek word, kairos — it roughly means "the right moment to do something," as opposed to time just passing by. It felt like a fitting name for a club built around actually sitting down and building things, rather than just talking about them.</p>
-        <p>Right now, that means regular build sessions, pair programming, and honest conversations about what people are working on — the kind of things a small, early group can actually do well. But the direction is bigger: bringing in outside speakers, running real competitions, and growing this into a community people actively want to be part of, not just another group chat.</p>
+      <nav>
+        <div class="navbrand">
+          <a href="index.html">
+            <span>KAIROS SYNDICATE</span>
+          </a>
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#about">about</a></li>
+          <li><a href="team.html">team</a></li>
+          <li><a href="#do">what we do</a></li>
+          <li><a href="#join">join</a></li>
+        </ul>
+
+        <div style="display: flex; align-items: center;">
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            type="button"
+          >
+            dark mode
+          </button>
+
+          <button
+            class="nav-toggle"
+            id="navToggle"
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            aria-controls="navLinks"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <div class="hero-text">
+          <div class="tag-line hero-anim d1">
+            ai_cs_club
+          </div>
+
+          <h1 class="pixel hero-anim d2">
+            Kairos
+          </h1>
+
+          <p class="hero-anim d3">
+            Kairos is an AI/CS club for people who'd rather build than just
+            talk about it — algorithms, systems, real projects, whatever pulls
+            you in. We're early, and we're building this to become something
+            worth being part of.
+          </p>
+
+          <div class="btn-row hero-anim d4">
+            <a href="#join" class="btn solid">
+              Join
+            </a>
+
+            <a href="#about" class="btn">
+              Read more
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap">
+        <div class="section-label reveal">
+          <span>#</span> about
+        </div>
+
+        <div class="prose reveal">
+          <p>
+            The name comes from a Greek word, kairos — it roughly means
+            "the right moment to do something," as opposed to time just
+            passing by. It felt like a fitting name for a club built around
+            actually sitting down and building things, rather than just
+            talking about them.
+          </p>
+
+          <p>
+            Right now, that means regular build sessions, pair programming,
+            and honest conversations about what people are working on — the
+            kind of things a small, early group can actually do well. But the
+            direction is bigger: bringing in outside speakers, running real
+            competitions, and growing this into a community people actively
+            want to be part of, not just another group chat.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="do">
+      <div class="wrap">
+        <div class="section-label reveal">
+          <span>#</span> what we do
+        </div>
+
+        <div class="term-list">
+          <div class="term-item reveal">
+            <div class="idx">01</div>
+
+            <div>
+              <h3>Build sessions</h3>
+
+              <p>
+                Regular sessions where a few of us sit down and build
+                something real, start to finish — no half-finished tutorials,
+                just working code by the end.
+              </p>
+            </div>
+          </div>
+
+          <div class="term-item reveal reveal-delay-1">
+            <div class="idx">02</div>
+
+            <div>
+              <h3>Problem solving practice</h3>
+
+              <p>
+                Competitive programming practice together, with an eye on
+                actually entering contests as a group rather than everyone
+                grinding alone.
+              </p>
+            </div>
+          </div>
+
+          <div class="term-item reveal reveal-delay-2">
+            <div class="idx">03</div>
+
+            <div>
+              <h3>Systems &amp; low-level stuff</h3>
+
+              <p>
+                For people who want to go a level under the usual coursework —
+                how things actually run under the hood, not just how to call
+                the API.
+              </p>
+            </div>
+          </div>
+
+          <div class="term-item reveal reveal-delay-3">
+            <div class="idx">04</div>
+
+            <div>
+              <h3>Open source</h3>
+
+              <p>
+                Contributing to existing projects now, with the goal of
+                maintaining a couple of our own once the club has the hands
+                for it.
+              </p>
+            </div>
+          </div>
+
+          <div class="term-item reveal reveal-delay-4">
+            <div class="idx">05</div>
+
+            <div>
+              <h3>Guest sessions</h3>
+
+              <p>
+                We're working on bringing in people already working in the
+                field — engineers, researchers, founders — for honest Q&amp;As,
+                not polished keynotes.
+              </p>
+            </div>
+          </div>
+
+          <div class="term-item reveal reveal-delay-4">
+            <div class="idx">06</div>
+
+            <div>
+              <h3>Competitions &amp; hackathons</h3>
+
+              <p>
+                The plan is to enter these as a club, and eventually run one
+                ourselves — early days, but that's the direction we're
+                building toward.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="join">
+      <div class="wrap">
+        <div class="section-label reveal">
+          <span>#</span> join
+        </div>
+
+        <div class="join-box reveal">
+          <div class="join-intro">
+            <div class="pixel">
+              no application needed
+            </div>
+
+            <p>
+              Leave your details and tell us how we can build together.
+            </p>
+          </div>
+
+          <form
+            id="joinForm"
+            class="join-form"
+            novalidate
+          >
+            <div class="field">
+              <label for="joinName">
+                name
+              </label>
+
+              <input
+                type="text"
+                id="joinName"
+                name="name"
+                required
+                autocomplete="name"
+              />
+            </div>
+
+            <div class="field">
+              <label for="joinEmail">
+                email
+              </label>
+
+              <input
+                type="email"
+                id="joinEmail"
+                name="email"
+                required
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="field">
+              <label for="joinYear">
+                class / college year
+              </label>
+
+              <input
+                type="text"
+                id="joinYear"
+                name="year"
+                required
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="field">
+              <label for="joinDeliver">
+                what can you bring to the org?
+              </label>
+
+              <textarea
+                id="joinDeliver"
+                name="deliver"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="joinNote">
+                what draws you to this club?
+              </label>
+
+              <textarea
+                id="joinNote"
+                name="note"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="joinProblem">
+                what problem are you facing that we could work on together?
+              </label>
+
+              <textarea
+                id="joinProblem"
+                name="problem"
+                rows="4"
+                placeholder="It could be a technical, academic, campus, or community problem."
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="btn solid"
+            >
+              Submit
+            </button>
+
+            <div
+              id="joinStatus"
+              class="join-status"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <div class="footer-brand">
+        <div class="footer-mark">
+          <span class="prompt" aria-hidden="true">$</span>
+
+          <strong
+            data-tooltip="kairos (n.) — the right moment to act"
+            tabindex="0"
+          >
+            kairos_syndicate
+          </strong>
+        </div>
+
+        <p class="footer-note">
+          Started by a few people who'd rather build than wait for permission —
+          still small, still early, still shipping.
+        </p>
+      </div>
+
+      <div class="footer-meta">
+        <div class="footer-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          building in the open
+        </div>
+
+        <a href="#top" class="footer-top-link">
+          back to top ↑
+        </a>
       </div>
     </div>
-  </section>
+  </footer>
 
-  <section id="do">
-    <div class="wrap">
-      <div class="section-label reveal"><span>#</span> what we do</div>
-      <div class="term-list">
-        <div class="term-item reveal">
-          <div class="idx">01</div>
-          <div>
-            <h3>Build sessions</h3>
-            <p>Regular sessions where a few of us sit down and build something real, start to finish — no half-finished tutorials, just working code by the end.</p>
-          </div>
-        </div>
-        <div class="term-item reveal reveal-delay-1">
-          <div class="idx">02</div>
-          <div>
-            <h3>Problem solving practice</h3>
-            <p>Competitive programming practice together, with an eye on actually entering contests as a group rather than everyone grinding alone.</p>
-          </div>
-        </div>
-        <div class="term-item reveal reveal-delay-2">
-          <div class="idx">03</div>
-          <div>
-            <h3>Systems &amp; low-level stuff</h3>
-            <p>For people who want to go a level under the usual coursework — how things actually run under the hood, not just how to call the API.</p>
-          </div>
-        </div>
-        <div class="term-item reveal reveal-delay-3">
-          <div class="idx">04</div>
-          <div>
-            <h3>Open source</h3>
-            <p>Contributing to existing projects now, with the goal of maintaining a couple of our own once the club has the hands for it.</p>
-          </div>
-        </div>
-        <div class="term-item reveal reveal-delay-4">
-          <div class="idx">05</div>
-          <div>
-            <h3>Guest sessions</h3>
-            <p>We're working on bringing in people already working in the field — engineers, researchers, founders — for honest Q&amp;As, not polished keynotes.</p>
-          </div>
-        </div>
-        <div class="term-item reveal reveal-delay-4">
-          <div class="idx">06</div>
-          <div>
-            <h3>Competitions &amp; hackathons</h3>
-            <p>The plan is to enter these as a club, and eventually run one ourselves — early days, but that's the direction we're building toward.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <script>
+    const root =
+      document.documentElement;
 
-  <section id="join">
-    <div class="wrap">
-      <div class="section-label reveal"><span>#</span> join</div>
-      <div class="join-box reveal">
-        <div class="join-intro">
-          <div class="pixel" style="font-size: 13px;">no application needed</div>
-          <p>Leave your details and we'll reach out</p>
-        </div>
+    /*
+     * Scroll progress
+     */
+    const scrollProgress =
+      document.getElementById('scrollProgress');
 
-        <form id="joinForm" class="join-form" novalidate>
-          <div class="field">
-            <label for="joinName">name</label>
-            <input type="text" id="joinName" name="name" required autocomplete="name">
-          </div>
-          <div class="field">
-            <label for="joinEmail">email</label>
-            <input type="email" id="joinEmail" name="email" required autocomplete="email">
-          </div>
-          <div class="field">
-            <label for="joinYear">class / college year</label>
-            <input type="text" id="joinYear" name="year" required autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="joinDeliver">what can you bring to the org?</label>
-            <textarea id="joinDeliver" name="deliver" rows="3"></textarea>
-          </div>
-          <div class="field">
-            <label for="joinNote">what draws you to this club?</label>
-            <textarea id="joinNote" name="note" rows="3"></textarea>
-          </div>
-          <button type="submit" class="btn solid">Submit</button>
-          <div id="joinStatus" class="join-status" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-    </div>
-  </section>
-</main>
+    function updateScrollProgress() {
+      const scrollTop =
+        window.scrollY;
 
-<footer>
-  <div class="wrap footer-row">
-    <div class="footer-brand">
-      <div class="footer-mark">
-        <span class="prompt" aria-hidden="true">$</span>
-        <strong data-tooltip="kairos (n.) — the right moment to act" tabindex="0">kairos_syndicate</strong>
-      </div>
-      <p class="footer-note">Started by a few people who'd rather build than wait for permission — still small, still early, still shipping.</p>
-    </div>
-    <div class="footer-meta">
-      <div class="footer-status"><span class="status-dot" aria-hidden="true"></span> building in the open</div>
-      <a href="#top" class="footer-top-link" id="backToTop">back to top ↑</a>
-    </div>
-  </div>
-</footer>
+      const documentHeight =
+        document.documentElement.scrollHeight -
+        window.innerHeight;
 
-<script>
-  const root = document.documentElement;
+      const percentage =
+        documentHeight > 0
+          ? (scrollTop / documentHeight) * 100
+          : 0;
 
-  // Scroll progress bar
-  const scrollProgress = document.getElementById('scrollProgress');
-  function updateScrollProgress() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    scrollProgress.style.width = pct + '%';
-  }
-  window.addEventListener('scroll', updateScrollProgress, { passive: true });
-  updateScrollProgress();
+      scrollProgress.style.width =
+        percentage + '%';
+    }
 
-  // Magnetic buttons — nudge toward the cursor, snap back on leave
-  const magnetPrefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!magnetPrefersReduced) {
-    document.querySelectorAll('.btn').forEach((btn) => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const relX = e.clientX - rect.left - rect.width / 2;
-        const relY = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate(${relX * 0.18}px, ${relY * 0.35}px)`;
+    window.addEventListener(
+      'scroll',
+      updateScrollProgress,
+      { passive: true }
+    );
+
+    updateScrollProgress();
+
+    /*
+     * Subtle button movement
+     */
+    const prefersReducedMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+    if (!prefersReducedMotion) {
+      document.querySelectorAll('.btn').forEach((button) => {
+        button.addEventListener('mousemove', (event) => {
+          const rect =
+            button.getBoundingClientRect();
+
+          const x =
+            event.clientX -
+            rect.left -
+            rect.width / 2;
+
+          const y =
+            event.clientY -
+            rect.top -
+            rect.height / 2;
+
+          button.style.transform =
+            `translate(${x * 0.10}px, ${y * 0.16}px)`;
+        });
+
+        button.addEventListener('mouseleave', () => {
+          button.style.transform = '';
+        });
       });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transform = '';
+    }
+
+    /*
+     * Theme toggle
+     */
+    const themeToggle =
+      document.getElementById('themeToggle');
+
+    const savedTheme =
+      localStorage.getItem('kairos-theme');
+
+    if (
+      savedTheme === 'light' ||
+      savedTheme === 'dark'
+    ) {
+      root.setAttribute(
+        'data-theme',
+        savedTheme
+      );
+
+      themeToggle.textContent =
+        savedTheme === 'dark'
+          ? 'light mode'
+          : 'dark mode';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const nextTheme =
+        root.getAttribute('data-theme') === 'dark'
+          ? 'light'
+          : 'dark';
+
+      root.setAttribute(
+        'data-theme',
+        nextTheme
+      );
+
+      localStorage.setItem(
+        'kairos-theme',
+        nextTheme
+      );
+
+      themeToggle.textContent =
+        nextTheme === 'dark'
+          ? 'light mode'
+          : 'dark mode';
+    });
+
+    /*
+     * Mobile navigation
+     */
+    const navToggle =
+      document.getElementById('navToggle');
+
+    const navLinks =
+      document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen =
+        navLinks.classList.toggle('open');
+
+      navToggle.classList.toggle(
+        'open',
+        isOpen
+      );
+
+      navToggle.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+      );
+    });
+
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+
+        navToggle.setAttribute(
+          'aria-expanded',
+          'false'
+        );
       });
     });
 
-    // Spotlight — a soft accent glow that tracks the cursor inside each row
-    document.querySelectorAll('.term-item').forEach((item) => {
-      item.addEventListener('mousemove', (e) => {
-        const rect = item.getBoundingClientRect();
-        item.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-        item.style.setProperty('--my', `${e.clientY - rect.top}px`);
-      });
-    });
-  }
+    /*
+     * Smooth cursor fade
+     */
+    let targetCursorOpacity = 1;
+    let cursorOpacity = 1;
 
-  const toggle = document.getElementById('themeToggle');
-  toggle.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    toggle.textContent = next === 'dark' ? 'light mode' : 'dark mode';
-  });
+    const joinBox =
+      document.querySelector('.join-box');
 
-  const navToggle = document.getElementById('navToggle');
-  const navLinksEl = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => {
-    const isOpen = navLinksEl.classList.toggle('open');
-    navToggle.classList.toggle('open', isOpen);
-    navToggle.setAttribute('aria-expanded', String(isOpen));
-  });
-  navLinksEl.querySelectorAll('a').forEach((a) => {
-    a.addEventListener('click', () => {
-      navLinksEl.classList.remove('open');
-      navToggle.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-    });
-  });
+    function updateCursorVisibility() {
+      const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 24;
 
-  (function () {
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    const fgCanvas = document.getElementById('fgCanvas');
-    const fgCtx = fgCanvas.getContext('2d');
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let w, h, particles;
-    const mouse = { x: -9999, y: -9999, active: false };
+      const isHoveringForm =
+        joinBox &&
+        joinBox.matches(':hover');
 
-    function hexToRgb(hex) {
-      hex = hex.replace('#', '');
-      if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
-      const num = parseInt(hex, 16);
-      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+      targetCursorOpacity =
+        isAtBottom || isHoveringForm
+          ? 0
+          : 1;
     }
 
-    function getColor(isDark) {
-      const varName = isDark ? '--accent' : '--accent-deep';
-      const val = getComputedStyle(root).getPropertyValue(varName).trim();
-      return hexToRgb(val || (isDark ? '#4FB8E0' : '#0B2A42'));
+    if (joinBox) {
+      joinBox.addEventListener(
+        'mouseenter',
+        updateCursorVisibility
+      );
+
+      joinBox.addEventListener(
+        'mouseleave',
+        updateCursorVisibility
+      );
     }
 
-    function resize() {
-      w = canvas.width = fgCanvas.width = window.innerWidth;
-      h = canvas.height = fgCanvas.height = window.innerHeight;
-    }
+    window.addEventListener(
+      'scroll',
+      updateCursorVisibility,
+      { passive: true }
+    );
 
-    function initParticles() {
-      const count = Math.min(85, Math.max(40, Math.floor((w * h) / 15000)));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.7,
-        vy: (Math.random() - 0.5) * 0.7,
-        r: 1.2 + Math.random() * 1.6,
-        phase: Math.random() * Math.PI * 2,
-      }));
-    }
+    window.addEventListener(
+      'resize',
+      updateCursorVisibility
+    );
 
-    resize();
-    initParticles();
-    let lastWidth = window.innerWidth;
-    window.addEventListener('resize', () => {
-      // Mobile browsers fire 'resize' when the address bar hides/shows
-      // during scroll — that's a height-only change, not a real resize.
-      // Only reinitialize particles on a genuine width change (rotation,
-      // real window resize); otherwise just update canvas dimensions so
-      // the existing particles keep their positions and motion.
-      const newW = window.innerWidth;
-      resize();
-      if (newW !== lastWidth) {
-        lastWidth = newW;
-        initParticles();
+    updateCursorVisibility();
+
+    /*
+     * Background particles and cursor ring
+     */
+    (function () {
+      const canvas =
+        document.getElementById('bgCanvas');
+
+      const ctx =
+        canvas.getContext('2d');
+
+      const foregroundCanvas =
+        document.getElementById('fgCanvas');
+
+      const foregroundContext =
+        foregroundCanvas.getContext('2d');
+
+      const reducedMotion =
+        window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+
+      let width;
+      let height;
+      let particles;
+
+      const mouse = {
+        x: -9999,
+        y: -9999,
+        active: false
+      };
+
+      function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+
+        if (hex.length === 3) {
+          hex = hex
+            .split('')
+            .map((character) => character + character)
+            .join('');
+        }
+
+        const number =
+          parseInt(hex, 16);
+
+        return {
+          r: (number >> 16) & 255,
+          g: (number >> 8) & 255,
+          b: number & 255
+        };
       }
-    });
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      mouse.active = true;
-    });
-    window.addEventListener('mouseleave', () => { mouse.active = false; });
 
-    // Cursor probe — a smoothed "node" that follows the pointer, trailing
-    // a short comet tail and lighting up faint links to nearby particles,
-    // like a probe reading the circuit as it moves
-    let cx = w / 2, cy = h / 2;
-    const cursorTrail = [];
+      function getAccentColor() {
+        const color =
+          getComputedStyle(root)
+            .getPropertyValue('--accent')
+            .trim();
 
-    // Signal pulses — small bright dots that travel along an active
-    // connection, like data moving through a circuit trace
-    const pulses = [];
-    let pulseTimer = 0;
+        return hexToRgb(
+          color || '#5E6AD2'
+        );
+      }
 
-    let t = 0;
+      function resizeCanvas() {
+        width =
+          canvas.width =
+          foregroundCanvas.width =
+          window.innerWidth;
 
-    function draw() {
-      t += 1;
-      ctx.clearRect(0, 0, w, h);
-      fgCtx.clearRect(0, 0, w, h);
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      const accent = getColor(isDark);
-      const lineAlphaMax = isDark ? 0.30 : 0.32;
-      const linkDist = 145;
-      const pushRadius = 110;
+        height =
+          canvas.height =
+          foregroundCanvas.height =
+          window.innerHeight;
+      }
 
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
+      function createParticles() {
+        const count =
+          Math.min(
+            65,
+            Math.max(
+              32,
+              Math.floor((width * height) / 22000)
+            )
+          );
 
+        particles =
+          Array.from(
+            { length: count },
+            () => ({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.35,
+              vy: (Math.random() - 0.5) * 0.35,
+              r: 1 + Math.random() * 1.2,
+              phase: Math.random() * Math.PI * 2
+            })
+          );
+      }
+
+      resizeCanvas();
+      createParticles();
+
+      let previousWidth =
+        window.innerWidth;
+
+      window.addEventListener('resize', () => {
+        const newWidth =
+          window.innerWidth;
+
+        resizeCanvas();
+
+        if (newWidth !== previousWidth) {
+          previousWidth = newWidth;
+          createParticles();
+        }
+      });
+
+      window.addEventListener('mousemove', (event) => {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+        mouse.active = true;
+      });
+
+      window.addEventListener('mouseleave', () => {
+        mouse.active = false;
+      });
+
+      let cursorX = width / 2;
+      let cursorY = height / 2;
+
+      const cursorTrail = [];
+      const pulses = [];
+
+      let pulseTimer = 0;
+      let animationTime = 0;
+
+      function draw() {
+        animationTime += 1;
+
+        ctx.clearRect(
+          0,
+          0,
+          width,
+          height
+        );
+
+        foregroundContext.clearRect(
+          0,
+          0,
+          width,
+          height
+        );
+
+        /*
+         * Smoothly approach the target opacity.
+         */
+        cursorOpacity +=
+          (targetCursorOpacity - cursorOpacity) *
+          0.08;
+
+        const accent =
+          getAccentColor();
+
+        const lineOpacity =
+          root.getAttribute('data-theme') === 'dark'
+            ? 0.08
+            : 0.06;
+
+        const linkDistance = 120;
+        const pushRadius = 90;
+
+        for (const particle of particles) {
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+
+          if (mouse.active) {
+            const dx =
+              particle.x - mouse.x;
+
+            const dy =
+              particle.y - mouse.y;
+
+            const distance =
+              Math.sqrt(dx * dx + dy * dy);
+
+            if (
+              distance < pushRadius &&
+              distance > 0.01
+            ) {
+              const force =
+                (1 - distance / pushRadius) *
+                0.45;
+
+              particle.x +=
+                (dx / distance) * force;
+
+              particle.y +=
+                (dy / distance) * force;
+            }
+          }
+
+          if (particle.x < -10) {
+            particle.x = width + 10;
+          }
+
+          if (particle.x > width + 10) {
+            particle.x = -10;
+          }
+
+          if (particle.y < -10) {
+            particle.y = height + 10;
+          }
+
+          if (particle.y > height + 10) {
+            particle.y = -10;
+          }
+        }
+
+        const activeEdges = [];
+
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const first =
+              particles[i];
+
+            const second =
+              particles[j];
+
+            const dx =
+              first.x - second.x;
+
+            const dy =
+              first.y - second.y;
+
+            const distance =
+              Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < linkDistance) {
+              ctx.strokeStyle =
+                `rgba(${accent.r},${accent.g},${accent.b},` +
+                `${lineOpacity * (
+                  1 - distance / linkDistance
+                )})`;
+
+              ctx.lineWidth = 1;
+
+              ctx.beginPath();
+              ctx.moveTo(first.x, first.y);
+              ctx.lineTo(second.x, second.y);
+              ctx.stroke();
+
+              activeEdges.push([
+                first,
+                second
+              ]);
+            }
+          }
+        }
+
+        for (const particle of particles) {
+          const twinkle =
+            0.22 +
+            0.12 *
+            Math.sin(
+              animationTime * 0.04 +
+              particle.phase
+            );
+
+          ctx.fillStyle =
+            `rgba(${accent.r},${accent.g},${accent.b},${twinkle})`;
+
+          ctx.beginPath();
+
+          ctx.arc(
+            particle.x,
+            particle.y,
+            particle.r,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+        }
+
+        /*
+         * Very subtle signal pulses
+         */
+        pulseTimer++;
+
+        if (
+          pulseTimer > 75 &&
+          activeEdges.length &&
+          pulses.length < 3
+        ) {
+          pulseTimer = 0;
+
+          const edge =
+            activeEdges[
+              Math.floor(
+                Math.random() *
+                activeEdges.length
+              )
+            ];
+
+          pulses.push({
+            first: edge[0],
+            second: edge[1],
+            progress: 0
+          });
+        }
+
+        for (let i = pulses.length - 1; i >= 0; i--) {
+          const pulse =
+            pulses[i];
+
+          pulse.progress += 0.014;
+
+          if (pulse.progress >= 1) {
+            pulses.splice(i, 1);
+            continue;
+          }
+
+          const x =
+            pulse.first.x +
+            (pulse.second.x - pulse.first.x) *
+            pulse.progress;
+
+          const y =
+            pulse.first.y +
+            (pulse.second.y - pulse.first.y) *
+            pulse.progress;
+
+          const fade =
+            Math.sin(
+              pulse.progress * Math.PI
+            );
+
+          ctx.fillStyle =
+            `rgba(${accent.r},${accent.g},${accent.b},${0.35 * fade})`;
+
+          ctx.beginPath();
+
+          ctx.arc(
+            x,
+            y,
+            1.4,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+        }
+
+        /*
+         * Cursor movement and probe connections
+         */
         if (mouse.active) {
-          const dx = p.x - mouse.x, dy = p.y - mouse.y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < pushRadius && d > 0.01) {
-            const force = (1 - d / pushRadius) * 0.9;
-            p.x += (dx / d) * force;
-            p.y += (dy / d) * force;
+          cursorX +=
+            (mouse.x - cursorX) *
+            0.16;
+
+          cursorY +=
+            (mouse.y - cursorY) *
+            0.16;
+
+          cursorTrail.push({
+            x: cursorX,
+            y: cursorY
+          });
+
+          if (cursorTrail.length > 18) {
+            cursorTrail.shift();
           }
+
+          const probeRadius = 145;
+
+          for (const particle of particles) {
+            const dx =
+              particle.x - cursorX;
+
+            const dy =
+              particle.y - cursorY;
+
+            const distance =
+              Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < probeRadius) {
+              const alpha =
+                (1 - distance / probeRadius) *
+                0.12 *
+                cursorOpacity;
+
+              ctx.strokeStyle =
+                `rgba(${accent.r},${accent.g},${accent.b},${alpha})`;
+
+              ctx.lineWidth = 1;
+
+              ctx.beginPath();
+              ctx.moveTo(cursorX, cursorY);
+              ctx.lineTo(particle.x, particle.y);
+              ctx.stroke();
+            }
+          }
+        } else if (cursorTrail.length) {
+          cursorTrail.shift();
         }
 
-        if (p.x < -10) p.x = w + 10;
-        if (p.x > w + 10) p.x = -10;
-        if (p.y < -10) p.y = h + 10;
-        if (p.y > h + 10) p.y = -10;
-      }
+        /*
+         * Soft cursor trail
+         */
+        if (cursorTrail.length > 1) {
+          foregroundContext.save();
 
-      const activeEdges = [];
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i], b = particles[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < linkDist) {
-            ctx.strokeStyle = `rgba(${accent.r},${accent.g},${accent.b},${lineAlphaMax * (1 - dist / linkDist)})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-            activeEdges.push([a, b]);
+          foregroundContext.globalAlpha =
+            cursorOpacity;
+
+          foregroundContext.beginPath();
+
+          foregroundContext.moveTo(
+            cursorTrail[0].x,
+            cursorTrail[0].y
+          );
+
+          for (
+            let i = 1;
+            i < cursorTrail.length;
+            i++
+          ) {
+            foregroundContext.lineTo(
+              cursorTrail[i].x,
+              cursorTrail[i].y
+            );
           }
+
+          foregroundContext.strokeStyle =
+            `rgba(${accent.r},${accent.g},${accent.b},0.16)`;
+
+          foregroundContext.lineWidth = 1;
+          foregroundContext.lineCap = 'round';
+          foregroundContext.stroke();
+
+          foregroundContext.restore();
+        }
+
+        /*
+         * Elegant cursor ring
+         */
+        if (cursorTrail.length) {
+          const head =
+            cursorTrail[
+              cursorTrail.length - 1
+            ];
+
+          const pulse =
+            0.45 +
+            Math.sin(animationTime * 0.06) *
+            0.10;
+
+          foregroundContext.save();
+
+          foregroundContext.globalAlpha =
+            cursorOpacity;
+
+          foregroundContext.translate(
+            head.x,
+            head.y
+          );
+
+          foregroundContext.rotate(
+            animationTime * 0.008
+          );
+
+          /*
+           * Main ring
+           */
+          foregroundContext.strokeStyle =
+            `rgba(${accent.r},${accent.g},${accent.b},0.72)`;
+
+          foregroundContext.lineWidth = 1;
+
+          foregroundContext.beginPath();
+
+          foregroundContext.arc(
+            0,
+            0,
+            7,
+            0,
+            Math.PI * 2
+          );
+
+          foregroundContext.stroke();
+
+          /*
+           * Broken outer orbit
+           */
+          foregroundContext.strokeStyle =
+            `rgba(${accent.r},${accent.g},${accent.b},${pulse})`;
+
+          foregroundContext.beginPath();
+
+          foregroundContext.arc(
+            0,
+            0,
+            10,
+            -0.65,
+            0.65
+          );
+
+          foregroundContext.stroke();
+
+          foregroundContext.beginPath();
+
+          foregroundContext.arc(
+            0,
+            0,
+            10,
+            Math.PI - 0.65,
+            Math.PI + 0.65
+          );
+
+          foregroundContext.stroke();
+
+          foregroundContext.restore();
         }
       }
 
-      for (const p of particles) {
-        const twinkle = 0.45 + 0.35 * Math.sin(t * 0.04 + p.phase);
-        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${twinkle})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Spawn a new signal pulse every ~55 frames along a live connection,
-      // like a packet of data hopping between circuit nodes
-      pulseTimer++;
-      if (pulseTimer > 55 && activeEdges.length && pulses.length < 6) {
-        pulseTimer = 0;
-        const [a, b] = activeEdges[Math.floor(Math.random() * activeEdges.length)];
-        pulses.push({ a, b, tt: 0 });
-      }
-      for (let i = pulses.length - 1; i >= 0; i--) {
-        const pu = pulses[i];
-        pu.tt += 0.018;
-        if (pu.tt >= 1) { pulses.splice(i, 1); continue; }
-        const px = pu.a.x + (pu.b.x - pu.a.x) * pu.tt;
-        const py = pu.a.y + (pu.b.y - pu.a.y) * pu.tt;
-        const fade = Math.sin(pu.tt * Math.PI);
-        ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${0.9 * fade})`;
-        ctx.beginPath();
-        ctx.arc(px, py, 2.1, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Cursor probe — ease toward the pointer, log a short trail, and
-      // light up faint links to nearby particles
-      if (mouse.active) {
-        cx += (mouse.x - cx) * 0.16;
-        cy += (mouse.y - cy) * 0.16;
-        cursorTrail.push({ x: cx, y: cy });
-        if (cursorTrail.length > 18) cursorTrail.shift();
-
-        const probeRadius = 170;
-        for (const p of particles) {
-          const dx = p.x - cx, dy = p.y - cy;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < probeRadius) {
-            const alpha = (1 - dist / probeRadius) * 0.35;
-            ctx.strokeStyle = `rgba(${accent.r},${accent.g},${accent.b},${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            ctx.lineTo(p.x, p.y);
-            ctx.stroke();
-          }
+      if (reducedMotion) {
+        draw();
+      } else {
+        function animationLoop() {
+          draw();
+          requestAnimationFrame(animationLoop);
         }
-      } else if (cursorTrail.length) {
-        cursorTrail.shift();
+
+        animationLoop();
+      }
+    })();
+
+    /*
+     * Reveal sections
+     */
+    const revealElements =
+      document.querySelectorAll('.reveal');
+
+    const revealObserver =
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.15,
+          rootMargin: '0px 0px -40px 0px'
+        }
+      );
+
+    revealElements.forEach((element) => {
+      revealObserver.observe(element);
+    });
+
+    /*
+     * Join form
+     */
+    const SHEET_ENDPOINT =
+      'https://script.google.com/macros/s/AKfycbwnXRhjJ8tuCws056VIjyGcy-snSQbNOI2wilMxpAg3n51Y4QthXj28ledDkpTQQLEd/exec';
+
+    const joinForm =
+      document.getElementById('joinForm');
+
+    const joinStatus =
+      document.getElementById('joinStatus');
+
+    const submitButton =
+      joinForm.querySelector(
+        'button[type="submit"]'
+      );
+
+    joinForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const name =
+        document.getElementById('joinName')
+          .value
+          .trim();
+
+      const email =
+        document.getElementById('joinEmail')
+          .value
+          .trim();
+
+      const year =
+        document.getElementById('joinYear')
+          .value
+          .trim();
+
+      const deliver =
+        document.getElementById('joinDeliver')
+          .value
+          .trim();
+
+      const note =
+        document.getElementById('joinNote')
+          .value
+          .trim();
+
+      const problem =
+        document.getElementById('joinProblem')
+          .value
+          .trim();
+
+      if (!name || !email || !year) {
+        joinStatus.textContent =
+          'name, email, and class/college year are required.';
+
+        joinStatus.className =
+          'join-status err';
+
+        return;
       }
 
-      for (let i = 0; i < cursorTrail.length; i++) {
-        const pt = cursorTrail[i];
-        const frac = (i + 1) / cursorTrail.length;
-        fgCtx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${frac * 0.5})`;
-        fgCtx.beginPath();
-        fgCtx.arc(pt.x, pt.y, 1 + frac * 3.5, 0, Math.PI * 2);
-        fgCtx.fill();
+      const submission = {
+        name,
+        email,
+        year,
+        deliver,
+        note,
+        problem
+      };
+
+      if (
+        !SHEET_ENDPOINT ||
+        SHEET_ENDPOINT.includes('PASTE_YOUR')
+      ) {
+        console.log(
+          'Join request:',
+          submission
+        );
+
+        joinStatus.textContent =
+          'backend not connected yet — logged to console for now.';
+
+        joinStatus.className =
+          'join-status err';
+
+        return;
       }
 
-      if (cursorTrail.length) {
-        const head = cursorTrail[cursorTrail.length - 1];
-        const grad = fgCtx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 16);
-        grad.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},0.30)`);
-        grad.addColorStop(1, `rgba(${accent.r},${accent.g},${accent.b},0)`);
-        fgCtx.fillStyle = grad;
-        fgCtx.beginPath();
-        fgCtx.arc(head.x, head.y, 16, 0, Math.PI * 2);
-        fgCtx.fill();
-        fgCtx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},0.85)`;
-        fgCtx.beginPath();
-        fgCtx.arc(head.x, head.y, 2.2, 0, Math.PI * 2);
-        fgCtx.fill();
-      }
-    }
+      submitButton.disabled = true;
 
-    if (prefersReduced) {
-      draw();
-    } else {
-      (function loop() { draw(); requestAnimationFrame(loop); })();
-    }
-  })();
+      joinStatus.textContent =
+        'sending…';
 
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        observer.unobserve(entry.target);
+      joinStatus.className =
+        'join-status';
+
+      try {
+        await fetch(SHEET_ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type':
+              'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams(
+            submission
+          ).toString()
+        });
+
+        joinStatus.textContent =
+          "got it — we'll be in touch.";
+
+        joinStatus.className =
+          'join-status ok';
+
+        joinForm.reset();
+      } catch (error) {
+        joinStatus.textContent =
+          'something went wrong — try again in a bit.';
+
+        joinStatus.className =
+          'join-status err';
+      } finally {
+        submitButton.disabled = false;
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-  revealEls.forEach((el) => observer.observe(el));
-
-  const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwnXRhjJ8tuCws056VIjyGcy-snSQbNOI2wilMxpAg3n51Y4QthXj28ledDkpTQQLEd/exec';
-
-  const joinForm = document.getElementById('joinForm');
-  const joinStatus = document.getElementById('joinStatus');
-  const submitBtn = joinForm.querySelector('button[type="submit"]');
-
-  joinForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('joinName').value.trim();
-    const email = document.getElementById('joinEmail').value.trim();
-    const year = document.getElementById('joinYear').value.trim();
-    const deliver = document.getElementById('joinDeliver').value.trim();
-    const note = document.getElementById('joinNote').value.trim();
-
-    if (!name || !email || !year) {
-      joinStatus.textContent = 'name, email, and class/college year are required.';
-      joinStatus.className = 'join-status err';
-      return;
-    }
-
-    const submission = { name, email, year, deliver, note };
-
-    if (!SHEET_ENDPOINT || SHEET_ENDPOINT.includes('PASTE_YOUR')) {
-      console.log('Join request (backend not connected yet):', submission);
-      joinStatus.textContent = 'backend not connected yet — logged to console for now.';
-      joinStatus.className = 'join-status err';
-      return;
-    }
-
-    submitBtn.disabled = true;
-    joinStatus.textContent = 'sending…';
-    joinStatus.className = 'join-status';
-
-    try {
-      await fetch(SHEET_ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(submission).toString(),
-      });
-
-      joinStatus.textContent = 'got it — we\'ll be in touch.';
-      joinStatus.className = 'join-status ok';
-      joinForm.reset();
-    } catch (err) {
-      joinStatus.textContent = 'something went wrong — try again in a bit.';
-      joinStatus.className = 'join-status err';
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-</script>
-
+  </script>
 </body>
 </html>
