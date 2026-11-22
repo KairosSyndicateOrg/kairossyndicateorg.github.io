@@ -1543,6 +1543,139 @@
           .nav-links li { opacity: 1; transform: none; }
         }
 
+
+        /* ---- recognition section ---- */
+        #recognition .recog {
+            grid-column: 2;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+            gap: 40px;
+            align-items: center;
+        }
+
+        #recognition .recog-text p {
+            margin: 0;
+            color: var(--soft);
+            font-size: 15px;
+            line-height: 1.9;
+            max-width: 52ch;
+        }
+
+        #recognition .recog-text p + p { margin-top: 20px; }
+
+        #recognition .recog-text .recog-note {
+            color: var(--ink);
+            padding-left: 16px;
+            border-left: 2px solid var(--acc);
+        }
+
+        .cert {
+            margin: 0;
+            padding: 10px;
+            background: var(--bg2);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+        }
+
+        .cert img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 14px;
+        }
+
+        .cert figcaption {
+            padding: 12px 8px 4px;
+            color: var(--soft);
+            font-size: 12.5px;
+        }
+
+        @media (max-width: 760px) {
+            #recognition .recog { grid-column: 1; grid-template-columns: 1fr; gap: 28px; }
+        }
+
+
+        /* ---- certificate: click to expand ---- */
+        .cert-open {
+            display: block;
+            width: 100%;
+            padding: 0;
+            border: 0;
+            background: none;
+            border-radius: 14px;
+            color: inherit;
+            font: inherit;
+            cursor: zoom-in;
+        }
+
+        .cert-open:focus-visible { outline: 2px solid var(--acc); outline-offset: 4px; }
+
+        .cert-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: rgba(8, 8, 9, 0);
+            -webkit-backdrop-filter: blur(0);
+            backdrop-filter: blur(0);
+            cursor: zoom-out;
+            transition: background .55s var(--ease), -webkit-backdrop-filter .55s var(--ease), backdrop-filter .55s var(--ease);
+        }
+
+        .cert-lightbox.on {
+            background: rgba(8, 8, 9, .86);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+
+        .cert-full {
+            position: absolute;
+            display: block;
+            max-width: none;
+            object-fit: cover;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+            transition: left .65s var(--ease), top .65s var(--ease), width .65s var(--ease), height .65s var(--ease), border-radius .65s var(--ease);
+        }
+
+        .cert-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: 1px solid #3a3a40;
+            border-radius: 50%;
+            background: rgba(21, 21, 22, .8);
+            color: var(--ink);
+            font: 400 22px/1 'Spline Sans Mono', monospace;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity .4s var(--ease), background .25s, color .25s;
+        }
+
+        .cert-lightbox.on .cert-close { opacity: 1; }
+        .cert-close:hover { background: var(--ink); color: #0d0d0e; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cert-lightbox, .cert-full, .cert-close { transition: none !important; }
+        }
+
+
+        /* section dividers: same hand-drawn wavy line as the hero, instead of a ruler line */
+        main > section { position: relative; }
+        section:not(.hero) { border-bottom-color: transparent; }
+        section:not(.hero)::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 8px;
+            opacity: .22;
+            pointer-events: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='8' viewBox='0 0 360 8'%3E%3Cpath d='M0 4.5 C30 2.5 52 6 90 4 S150 2 190 4.6 S250 6.2 290 3.8 S340 3 360 4.4' fill='none' stroke='%23e9e8e4' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center / 360px 8px;
+        }
+        main > section:last-child::after { display: none; }
   </style>
 </head>
 
@@ -1766,6 +1899,35 @@
               </div>
             </article>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="recognition">
+      <div class="wrap sec">
+        <div class="section-label reveal"><span>#</span> recognition</div>
+
+        <div class="recog">
+          <div class="recog-text reveal">
+            <p class="recog-note">
+              Our business inventory management app won 1st place in the
+              Startup Mela Competition at NEC Junior 2026, IIT Bombay.
+            </p>
+            <p>
+              Parth took the app to NEC Junior, the event run by E-Cell IIT Bombay,
+              and it came first in the Classes 9–12 category.
+            </p>
+          </div>
+
+          <figure class="cert reveal">
+            <button type="button" class="cert-open" aria-label="Enlarge the certificate">
+              <img src="assets/certificate-nec-junior.jpg"
+                   alt="Certificate of Achievement presented to Parth Satija (Team KAIROS) for 1st place in the Classes 9–12 category of the Startup Mela Competition, NEC Junior 2026, E-Cell IIT Bombay"
+                   width="1280" height="904"
+                   loading="lazy">
+            </button>
+            <figcaption>Certificate of Achievement, NEC Junior 2026, E-Cell IIT Bombay</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -2625,6 +2787,108 @@
   </script>
   <script>
 
+  </script>
+  <script>
+  /* certificate: expands from where it sits, click / Esc to close */
+  (function () {
+    var btn = document.querySelector('.cert-open');
+    if (!btn) return;
+    var thumb = btn.querySelector('img');
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var ratio = 1280 / 904;
+    var box = null, full = null, isOpen = false, busy = false;
+
+    function target() {
+      var w = Math.min(window.innerWidth * 0.92, window.innerHeight * 0.86 * ratio, 1400);
+      var h = w / ratio;
+      return { left: (window.innerWidth - w) / 2, top: (window.innerHeight - h) / 2, width: w, height: h };
+    }
+
+    function place(el, r) {
+      el.style.left = r.left + 'px';
+      el.style.top = r.top + 'px';
+      el.style.width = r.width + 'px';
+      el.style.height = r.height + 'px';
+    }
+
+    function openIt() {
+      if (isOpen || busy) return;
+      busy = true;
+      document.documentElement.style.overflow = 'hidden';
+
+      var r = thumb.getBoundingClientRect();
+      box = document.createElement('div');
+      box.className = 'cert-lightbox';
+      box.setAttribute('role', 'dialog');
+      box.setAttribute('aria-modal', 'true');
+      box.setAttribute('aria-label', 'Certificate, enlarged');
+
+      full = new Image();
+      full.className = 'cert-full';
+      full.src = thumb.currentSrc || thumb.src;
+      full.alt = thumb.alt;
+      place(full, r);
+
+      var close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'cert-close';
+      close.setAttribute('aria-label', 'Close');
+      close.innerHTML = '&times;';
+
+      box.appendChild(full);
+      box.appendChild(close);
+      document.body.appendChild(box);
+      thumb.style.visibility = 'hidden';
+      void box.offsetWidth;
+
+      window.requestAnimationFrame(function () {
+        box.classList.add('on');
+        place(full, target());
+        full.style.borderRadius = '22px';
+      });
+
+      isOpen = true;
+      close.focus({ preventScroll: true });
+      setTimeout(function () { busy = false; }, calm ? 0 : 650);
+      box.addEventListener('click', closeIt);
+    }
+
+    function closeIt() {
+      if (!isOpen || busy) return;
+      busy = true;
+      var r = thumb.getBoundingClientRect();
+      box.classList.remove('on');
+      place(full, r);
+      full.style.borderRadius = '14px';
+
+      setTimeout(function () {
+        if (box && box.parentNode) box.parentNode.removeChild(box);
+        box = null;
+        full = null;
+        thumb.style.visibility = '';
+        document.documentElement.style.overflow = '';
+        isOpen = false;
+        busy = false;
+        btn.focus({ preventScroll: true });
+      }, calm ? 0 : 650);
+    }
+
+    btn.addEventListener('click', openIt);
+
+    document.addEventListener('keydown', function (e) {
+      if (!isOpen) return;
+      if (e.key === 'Escape') closeIt();
+      if (e.key === 'Tab') e.preventDefault();
+    });
+
+    window.addEventListener('resize', function () {
+      if (!isOpen || busy || !full) return;
+      full.style.transition = 'none';
+      place(full, target());
+      void full.offsetWidth;
+      full.style.transition = '';
+    });
+  })();
   </script>
 </body>
 </html>
