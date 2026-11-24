@@ -1531,29 +1531,53 @@
 
         <div class="term-list">
           <div class="term-item reveal">
-            <h3>Its own space</h3>
+            <h3>1. Post your idea in #ideas</h3>
             <p>
-              Every project gets its own dedicated Discord group on our
-              server, created once the project is confirmed. All the
-              discussion happens there, and it's where the project lead
-              distributes tasks.
+              Anyone with an idea posts it in the Ideas group on our WhatsApp
+              community. Add the technical specs of how you would build it, as
+              far as you can figure them out. You don't need a perfect plan to
+              post.
             </p>
           </div>
 
           <div class="term-item reveal">
-            <h3>A project lead</h3>
+            <h3>2. Say how you'll help</h3>
+            <div>
+              <p>
+                If an idea interests you, reply in the same group with:
+              </p>
+              <p>
+                &bull; the role you can take<br>
+                &bull; the exact things you can help with<br>
+                &bull; how much time you can give each week
+              </p>
+            </div>
+          </div>
+
+          <div class="term-item reveal">
+            <h3>3. Project lead</h3>
             <p>
-              Every project has a project lead who gives it a direction and
-              makes sure it moves at the right pace, without delays.
+              The idea owner automatically becomes the project lead. If the
+              owner prefers not to lead, they stay the idea owner and name
+              someone else as project lead.
             </p>
           </div>
 
           <div class="term-item reveal">
-            <h3>Team size</h3>
+            <h3>4. Team formation</h3>
             <p>
-              Every team has at least 3 members. Small projects have 3 to 4
-              people and big projects have bigger teams, so the number of
-              projects at any time depends on how big they are.
+              The project lead and the project supervisor form the team
+              together. They decide who is on it by talking with the idea
+              owner. Every project needs a minimum of three members.
+            </p>
+          </div>
+
+          <div class="term-item reveal">
+            <h3>5. Execution</h3>
+            <p>
+              Each project gets its own Discord group. The project lead first
+              distributes the tasks, with an owner for each one, and pins the
+              list in the group. From there, the project is built.
             </p>
           </div>
 
@@ -1561,10 +1585,10 @@
             <h3>A position for everyone</h3>
             <div>
               <p>
-                Every participant in every project has a position, so no one
-                is left thinking they didn't get one. The position matches
-                the task someone is working on (frontend developer, backend
-                developer, designer, tester, and so on).
+                Every member holds a position, and every voice counts, whoever
+                you are. The position matches the task someone is working on
+                (frontend developer, backend developer, designer, tester, and
+                so on).
               </p>
               <p>
                 We only use the word &ldquo;lead&rdquo; when someone is
@@ -2604,7 +2628,7 @@
         var sections = document.querySelectorAll('main > section:not(.hero)');
         var made = [];
         sections.forEach(function (sec, i) {
-            if (sec.offsetHeight < 260 || sec.id === 'join') return;
+            if (sec.offsetHeight < 260 || sec.id === 'join' || sec.id === 'protocol') return;
             var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('viewBox', '0 0 64 64');
             svg.setAttribute('class', 'dd');
