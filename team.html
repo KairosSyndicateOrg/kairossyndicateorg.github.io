@@ -1481,7 +1481,53 @@
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='8' viewBox='0 0 360 8'%3E%3Cpath d='M0 4.5 C30 2.5 52 6 90 4 S150 2 190 4.6 S250 6.2 290 3.8 S340 3 360 4.4' fill='none' stroke='%23e9e8e4' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center / 360px 8px;
         }
         main > section:last-child::after { display: none; }
-  </style>
+  
+        /* ---- position titles: bigger, typed out like a terminal, with a blinking cursor ---- */
+        .section-label .role {
+            display: inline-block;
+            vertical-align: top;
+            max-width: calc(100% - 22px);
+            font-size: 21px;
+            line-height: 1.25;
+            font-weight: 700;
+            letter-spacing: .01em;
+            color: var(--ink);
+        }
+        .tw-w { display: inline-block; white-space: nowrap; font-style: normal; }
+        .tw-c { font-style: normal; }
+        .js .role.tw .tw-c { visibility: hidden; }
+        .js .role.tw .tw-c.on { visibility: visible; }
+        /* zero-width holder, so the cursor never changes the line wrapping */
+        .tw-cur {
+            position: relative;
+            display: inline-block;
+            width: 0;
+            height: 1em;
+            vertical-align: baseline;
+            font-style: normal;
+        }
+        .tw-cur::after {
+            content: "";
+            position: absolute;
+            left: 1px;
+            top: .16em;
+            width: .5em;
+            height: .95em;
+            background: var(--acc);
+        }
+        .tw-cur.blink::after { animation: blink 1s steps(1) infinite; }
+
+        @media (min-width: 761px) {
+            .team .sec { grid-template-columns: 240px 1fr; }
+        }
+        @media (max-width: 760px) {
+            .section-label .role { font-size: 19px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .js .role.tw .tw-c { visibility: visible; }
+            .tw-cur { display: none; }
+        }
+    </style>
 </head>
 
 <body>
@@ -1499,6 +1545,7 @@
           <li><a href="projects.html">projects</a></li>
           <li><a href="guest_sessions.html">guest sessions</a></li>
           <li><a href="opportunities.html">opportunities</a></li>
+          <li><a href="how-it-works.html">how it works</a></li>
         </ul>
 
         <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
@@ -1524,7 +1571,7 @@
 
     <section id="members" class="team">
       <div class="wrap sec">
-        <div class="section-label reveal"><span>#</span> founder</div>
+        <div class="section-label reveal"><span>#</span> <b class="role">founding president</b></div>
 
         <div class="term-list">
           <div class="term-item reveal">
@@ -1547,7 +1594,7 @@
       </div>
 
       <div class="wrap sec" style="margin-top: 56px;">
-        <div class="section-label reveal"><span>#</span> technical lead</div>
+        <div class="section-label reveal"><span>#</span> <b class="role">tech lead</b></div>
 
         <div class="term-list">
           <div class="term-item reveal"><h3>Parth Satija</h3></div>
@@ -1555,23 +1602,7 @@
       </div>
 
       <div class="wrap sec" style="margin-top: 56px;">
-        <div class="section-label reveal"><span>#</span> design lead</div>
-
-        <div class="term-list">
-          <div class="term-item reveal"><h3>Rayirth Sinha</h3></div>
-        </div>
-      </div>
-
-      <div class="wrap sec" style="margin-top: 56px;">
-        <div class="section-label reveal"><span>#</span> social media manager</div>
-
-        <div class="term-list">
-          <div class="term-item reveal"><h3>Abu Kalam</h3></div>
-        </div>
-      </div>
-
-      <div class="wrap sec" style="margin-top: 56px;">
-        <div class="section-label reveal"><span>#</span> advisor</div>
+        <div class="section-label reveal"><span>#</span> <b class="role">strategic advisor</b></div>
 
         <div class="term-list">
           <div class="term-item reveal"><h3>Shourya Bansal</h3></div>
@@ -1579,10 +1610,33 @@
       </div>
 
       <div class="wrap sec" style="margin-top: 56px;">
-        <div class="section-label reveal"><span>#</span> soul of the lab<br>the people who build our projects</div>
+        <div class="section-label reveal"><span>#</span> <b class="role">project supervisor</b></div>
 
         <div class="term-list">
           <div class="term-item reveal"><h3>Mudit Bhadada</h3></div>
+        </div>
+      </div>
+
+      <div class="wrap sec" style="margin-top: 56px;">
+        <div class="section-label reveal"><span>#</span> <b class="role">social media manager</b></div>
+
+        <div class="term-list">
+          <div class="term-item reveal"><h3>Abu Kalam</h3></div>
+        </div>
+      </div>
+
+      <div class="wrap sec" style="margin-top: 56px;">
+        <div class="section-label reveal"><span>#</span> <b class="role">design lead</b></div>
+
+        <div class="term-list">
+          <div class="term-item reveal"><h3>Rayirth Sinha</h3></div>
+        </div>
+      </div>
+
+      <div class="wrap sec" style="margin-top: 56px;">
+        <div class="section-label reveal"><span>#</span> <b class="role">soul of the lab</b><br>the people who build our projects</div>
+
+        <div class="term-list">
           <div class="term-item reveal"><h3>Tanishka Jain</h3></div>
           <div class="term-item reveal"><h3>Aditya Sihora</h3></div>
           <div class="term-item reveal"><h3>Shantanu S Krubasankar</h3></div>
@@ -2445,5 +2499,62 @@
   <script>
 
   </script>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var roles = document.querySelectorAll('.section-label .role');
+
+  roles.forEach(function (el) {
+    var text = el.textContent.trim();
+    el.setAttribute('aria-label', text);
+    el.textContent = '';
+    var chars = [];
+    text.split(' ').forEach(function (word, wi) {
+      if (wi) el.appendChild(document.createTextNode(' '));
+      var w = document.createElement('i');
+      w.className = 'tw-w';
+      w.setAttribute('aria-hidden', 'true');
+      word.split('').forEach(function (ch) {
+        var c = document.createElement('i');
+        c.className = 'tw-c';
+        c.textContent = ch;
+        w.appendChild(c);
+        chars.push(c);
+      });
+      el.appendChild(w);
+    });
+    el.classList.add('tw');
+    el._chars = chars;
+  });
+
+  function type(el) {
+    if (el._typed) return;
+    el._typed = true;
+    var chars = el._chars, n = 0;
+    if (reduce) { chars.forEach(function (c) { c.classList.add('on'); }); return; }
+    var cur = document.createElement('i');
+    cur.className = 'tw-cur';
+    cur.setAttribute('aria-hidden', 'true');
+    setTimeout(function step() {
+      if (n < chars.length) {
+        chars[n].classList.add('on');
+        chars[n].after(cur);          /* cursor sits right after the newest letter */
+        n++;
+        setTimeout(step, 55);
+      } else {
+        cur.classList.add('blink');   /* done: it stays and blinks, like the hero cursor */
+      }
+    }, 250);
+  }
+
+  if (!('IntersectionObserver' in window)) { roles.forEach(type); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { type(e.target); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.6 });
+  roles.forEach(function (el) { io.observe(el); });
+})();
+</script>
 </body>
 </html>
